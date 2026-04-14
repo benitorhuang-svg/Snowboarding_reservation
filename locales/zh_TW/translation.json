@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "story": "故事",
+    "hero": "進化曲線",
+    "explore": "探索雪場",
+    "support": "支援",
+    "booking": "預約課程"
+  },
+  "hero": {
+    "title_line1": "征服未被踏足的",
+    "title_highlight": "極限雪道",
+    "subtitle_line1": "在冰雪與重力之間，尋找最純粹的自我。",
+    "subtitle_line2": "從二世古到白馬，專業教練助你啟動越野之魂。",
+    "btn_start": "立即啟動",
+    "btn_explore": "探索課程"
+  },
+  "story": {
+    "label": "我們的故事 / OUR STORY",
+    "title_line1": "不僅是滑雪，",
+    "title_highlight": "深度對話",
+    "title_suffix": "更是靈魂與自然的",
+    "description": "我們相信，每一片未被踏足的粉雪都藏著一個故事。創辦於 2024 年，我們致力於連結全球最熱血的教練與渴望突破的滑雪者。在二世古的晨霧中，或在白馬的晚霞下，我們陪你寫下屬於自己的極限篇章。",
+    "stat_learners": "學員見證",
+    "stat_coaches": "認證教練",
+    "quote": "「在這裡，我學到的不只是滑行技術，更是如何與恐懼共處，並將其化為進步的動力。」",
+    "quote_author": "Alex, 專業學員"
+  },
+  "features": {
+    "card1_title": "頂級認證",
+    "card1_desc": "所有教練均持有 SAJ、CASI 或同等級國際滑雪證照，確保教學品質與安全。",
+    "card2_title": "無礙溝通",
+    "card2_desc": "專業華語、日語、英語三語教學，消除語言障礙，讓學習事半功倍。",
+    "card3_title": "個人化規劃",
+    "card3_desc": "根據您的程度從初學者到進階玩家，量身打造專屬的滑雪進修路徑。"
+  },
+  "progression": {
+    "label": "成長地圖 / PROGRESSION",
+    "level1_title": "初試晨曦 (Beginner)",
+    "level1_desc": "克服對坡度的恐懼，掌握基礎平衡與安全的跌倒技術。",
+    "level2_title": "流暢轉向 (Intermediate)",
+    "level2_desc": "學會控制板邊壓力，實現流暢的 S 型轉彎。",
+    "level3_title": "極限刻蝕 (Advanced)",
+    "level3_desc": "挑戰更陡峭的斜坡與粉雪區。磨練刻蝕 (Carving) 技術。",
+    "level4_title": "專業玩家 (Master)",
+    "level4_desc": "在極端地形中展現風格。具備跳躍或高山探險的實力。"
+  },
+  "home": {
+    "cta_title": "準備好開啟你的冒險了嗎？",
+    "cta_desc": "現在預訂二世古或白馬地區教練，享受專業的中文指導。",
+    "cta_button": "立刻預訂課程"
+  },
+  "location": {
+    "label": "探索基地 / LOCATIONS",
+    "title": "從北國粉雪至白馬之巔",
+    "niseko_title": "二世古 (Niseko)",
+    "niseko_desc": "全球知名的粉雪天堂。在這裡，你將體驗到乾爽如粉末般的「Japow」，以及最具國際化氛圍的滑雪社區。",
+    "hakuba_title": "白馬 (Hakuba)",
+    "hakuba_desc": "日本北阿爾卑斯山的雄偉代表。擁有多樣化的地形與世界級的滑道設計，是追求技術突破與極限挑戰的終極地點。"
+  },
+  "booking": {
+    "label": "RESERVATION",
+    "title": "預約課程",
+    "title_suffix": "/ BOOKING",
+    "back_home": "返回首頁",
+    "step1": "選擇課程類別",
+    "step2": "選擇預約日期",
+    "available_sessions": "Available Sessions",
+    "full": "已額滿",
+    "book_now": "預約"
+  }
+}
