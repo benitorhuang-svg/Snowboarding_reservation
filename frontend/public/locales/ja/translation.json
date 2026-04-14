@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "story": "ストーリー",
+    "hero": "進化曲線",
+    "explore": "スキー場探索",
+    "support": "サポート",
+    "booking": "コース予約"
+  },
+  "hero": {
+    "title_line1": "未踏の地を",
+    "title_highlight": "制覇する",
+    "subtitle_line1": "氷と重力の間で、真の自己を見つける。",
+    "subtitle_line2": "ニセコから白馬まで、プロのコーチがあなたのフリーライドの魂を呼び覚ます。",
+    "btn_start": "今すぐ開始",
+    "btn_explore": "コースを探索"
+  },
+  "story": {
+    "label": "OUR STORY",
+    "title_line1": "スノーボードだけでなく",
+    "title_highlight": "深い対話",
+    "title_suffix": "魂と自然との",
+    "description": "手つかずのパウダースノーには、ひとつひとつの物語が隠されていると信じています。2024年に設立された私たちは、世界クラスのコーチと限界突破を目指すライダーを繋ぎます。ニセコの朝霧から白馬の夕焼けまで、あなただけの物語を共に綴りましょう。",
+    "stat_learners": "受講生",
+    "stat_coaches": "公認コーチ",
+    "quote": "「ここで学んだのは滑走技術だけではありません。恐怖と向き合い、それを前進する力に変える方法です。」",
+    "quote_author": "Alex, プロ受講生"
+  },
+  "features": {
+    "card1_title": "最高峰の認定",
+    "card1_desc": "全てのコーチがSAJ、CASI、または同等の国際ライセンスを保持し、安全と品質を保証します。",
+    "card2_title": "スムーズな対話",
+    "card2_desc": "中国語、日本語、英語による専門的な指導で、言葉の壁を取り除き、学習効率を最大化します。",
+    "card3_title": "個別プラン",
+    "card3_desc": "初心者からエキスパートまで、あなたのレベルに合わせた専用のスキルアップパスを作成します。"
+  },
+  "progression": {
+    "label": "PROGRESSION",
+    "level1_title": "夜明け (Beginner)",
+    "level1_desc": "斜面への恐怖を克服し、基本のバランスと安全な転び方をマスターします。",
+    "level2_title": "スムーズなターン (Intermediate)",
+    "level2_desc": "エッジプレッシャーをコントロールし、スムーズなS字ターンを実現します。",
+    "level3_title": "エクストリームカービング (Advanced)",
+    "level3_desc": "急斜面やパウダーに挑戦。カービング技術を磨き上げます。",
+    "level4_title": "プロフェッショナル (Master)",
+    "level4_desc": "過酷な地形で独自のスタイルを表現。ジャンプや山岳探検のスキルを備えます。"
+  },
+  "home": {
+    "cta_title": "冒険を始める準備はできていますか？",
+    "cta_desc": "ニセコや白馬のコーチを今すぐ予約して、プロの指導を受けましょう。",
+    "cta_button": "今すぐ予約する"
+  },
+  "location": {
+    "label": "LOCATIONS",
+    "title": "北国のパウダーから白馬の頂へ",
+    "niseko_title": "ニセコ (Niseko)",
+    "niseko_desc": "世界的に有名なパウダー天国。さらさらの「Japow」と、最も国際的な雰囲気のコミュニティを体験してください。",
+    "hakuba_title": "白馬 (Hakuba)",
+    "hakuba_desc": "北アルプスの雄大な象徴。多様な地形と世界クラスのコース設計で、技術向上と限界への挑戦に最適な場所です。"
+  },
+  "booking": {
+    "label": "RESERVATION",
+    "title": "コース予約",
+    "title_suffix": "/ BOOKING",
+    "back_home": "ホームに戻る",
+    "step1": "コースを選択",
+    "step2": "日付を選択",
+    "available_sessions": "予約可能時間",
+    "full": "満員",
+    "book_now": "予約する"
+  }
+}

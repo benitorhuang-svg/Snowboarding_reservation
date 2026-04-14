@@ -1,0 +1,19 @@
+{
+  "name": "snowboarding-v2-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter backend run start:dev\" \"pnpm --filter frontend run dev\"",
+    "dev:backend": "pnpm --filter backend run start:dev",
+    "dev:frontend": "pnpm --filter frontend run dev",
+    "install:all": "pnpm install -r",
+    "prisma:generate": "pnpm --filter backend exec prisma generate",
+    "prisma:push": "pnpm --filter backend exec prisma db push",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  }
+}

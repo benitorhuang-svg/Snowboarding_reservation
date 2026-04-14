@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "story": "Story",
+    "hero": "Evolution Curve",
+    "explore": "Explore Resorts",
+    "support": "Support",
+    "booking": "Book Course"
+  },
+  "hero": {
+    "title_line1": "Conquer the Uncharted",
+    "title_highlight": "Extreme Slopes",
+    "subtitle_line1": "Between ice and gravity, find your truest self.",
+    "subtitle_line2": "From Niseko to Hakuba, professional coaches ignite your freeride soul.",
+    "btn_start": "Start Now",
+    "btn_explore": "Explore Courses"
+  },
+  "story": {
+    "label": "OUR STORY",
+    "title_line1": "Not Just Snowboarding,",
+    "title_highlight": "Deep Dialogue",
+    "title_suffix": "But a Soulful Conversation with Nature",
+    "description": "We believe every piece of untouched powder hides a story. Founded in 2024, we bridge world-class coaches with riders eager for breakthroughs. From Niseko's morning mist to Hakuba's sunset, let's write your own chapter together.",
+    "stat_learners": "Students",
+    "stat_coaches": "Coaches",
+    "quote": "\"I didn't just learn technique; I learned to dance with fear and turn it into momentum.\"",
+    "quote_author": "Alex, Pro Rider"
+  },
+  "features": {
+    "card1_title": "Top Certification",
+    "card1_desc": "All coaches hold SAJ, CASI, or equivalent international licenses to ensure safety and quality.",
+    "card2_title": "Seamless Comm",
+    "card2_desc": "Professional tri-lingual instruction (ZH/JA/EN) to clear boundaries and double learning efficiency.",
+    "card3_title": "Personalized Path",
+    "card3_desc": "From beginner milestones to master-tier jumps, we tailor your progression road."
+  },
+  "progression": {
+    "label": "PROGRESSION",
+    "level1_title": "Morning Dawn (Beginner)",
+    "level1_desc": "Overcome fear of slopes, master basic balance and safe falling.",
+    "level2_title": "Fluent Flow (Intermediate)",
+    "level2_desc": "Master edge pressure and achieve smooth S-turns.",
+    "level3_title": "Extreme Carve (Advanced)",
+    "level3_desc": "Challenge steeper terrain and powder. Refine your carving technique.",
+    "level4_title": "Master Tier (Master)",
+    "level4_desc": "Show off your style in extreme terrain. Master jumps and backcountry."
+  },
+  "home": {
+    "cta_title": "Ready for Your Adventure?",
+    "cta_desc": "Book your Niseko or Hakuba coach now for professional instruction.",
+    "cta_button": "Book Lesson Now"
+  },
+  "location": {
+    "label": "LOCATIONS",
+    "title": "From Powder North to Hakuba Peak",
+    "niseko_title": "Niseko",
+    "niseko_desc": "World-famous powder paradise. Experience the dry, flour-like 'Japow' and global atmosphere.",
+    "hakuba_title": "Hakuba",
+    "hakuba_desc": "The majestic face of Northern Alps. World-class slopes designed for technical breakthroughs."
+  },
+  "booking": {
+    "label": "RESERVATION",
+    "title": "Book Your Session",
+    "title_suffix": "/ BOOKING",
+    "back_home": "Back to Home",
+    "step1": "Select Course",
+    "step2": "Select Date",
+    "available_sessions": "Available Sessions",
+    "full": "Full",
+    "book_now": "Book Now"
+  }
+}

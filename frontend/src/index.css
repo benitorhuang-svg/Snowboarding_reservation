@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-accent-blue: #00d2ff;
+  --color-bg-dark: #0a0c10;
+  --color-border-light: rgba(255, 255, 255, 0.1);
+}
+
+:root {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--color-bg-dark);
+  color: white;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border-light);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.delay-200 { animation-delay: 200ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }

@@ -1,0 +1,117 @@
+// Standard Prisma Schema (v5)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  COACH
+  ADMIN
+}
+
+enum CourseType {
+  PRIVATE
+  GROUP
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          Role      @default(STUDENT)
+  preferences   Json?     
+  mobilePhone   String?   @map("mobile_phone")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  coachProfile  Coach?
+  orders        Order[]
+
+  @@map("users")
+}
+
+model Coach {
+  id              String    @id @default(uuid())
+  userId          String    @unique @map("user_id")
+  user            User      @relation(fields: [userId], references: [id])
+  bio             Json?     
+  rating          Decimal   @default(5.0) @db.Decimal(3, 2)
+  certifications  Json?     
+  
+  sessions        CourseSession[]
+
+  @@map("coaches")
+}
+
+model Course {
+  id               String      @id @default(uuid())
+  title            Json        
+  description      Json        
+  type             CourseType  @default(PRIVATE)
+  basePrice        Decimal     @map("base_price") @db.Decimal(10, 2)
+  currency         String      @default("TWD")
+  
+  sessions         CourseSession[]
+
+  @@map("courses")
+}
+
+model CourseSession {
+  id           String    @id @default(uuid())
+  courseId     String    @map("course_id")
+  course       Course    @relation(fields: [courseId], references: [id])
+  coachId      String    @map("coach_id")
+  coach        Coach     @relation(fields: [coachId], references: [id])
+  startTime    DateTime  @map("start_time")
+  endTime      DateTime  @map("end_time")
+  capacity     Int       @default(1)
+  bookedCount  Int       @default(0) @map("booked_count")
+  status       String    @default("OPEN") 
+  version      Int       @default(0)      
+
+  bookingItems BookingItem[]
+
+  @@index([startTime, endTime])
+  @@map("course_sessions")
+}
+
+model Order {
+  id                String      @id @default(uuid())
+  userId            String      @map("user_id")
+  user              User        @relation(fields: [userId], references: [id])
+  totalAmount       Decimal     @map("total_amount") @db.Decimal(10, 2)
+  status            OrderStatus @default(PENDING)
+  paymentMethod     String?     @map("payment_method")
+  tappayRecTradeId  String?     @map("tappay_rec_trade_id")
+  invoiceStatus     String?     @map("invoice_status")
+  invoiceNumber     String?     @map("invoice_number")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  items             BookingItem[]
+
+  @@map("orders")
+}
+
+model BookingItem {
+  id        String        @id @default(uuid())
+  orderId   String        @map("order_id")
+  order     Order         @relation(fields: [orderId], references: [id])
+  sessionId String        @map("session_id")
+  session   CourseSession @relation(fields: [sessionId], references: [id])
+  price     Decimal       @db.Decimal(10, 2)
+
+  @@map("booking_items")
+}
