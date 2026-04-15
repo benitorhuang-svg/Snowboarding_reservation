@@ -65,13 +65,20 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
   const steps = [
     { num: 1, label: t('booking.step1') },
     { num: 2, label: t('booking.step2') },
-    { num: 3, label: '選擇教練' },
-    { num: 4, label: '確認付款' }
+    { num: 3, label: t('booking.step3') },
+    { num: 4, label: t('booking.step4') }
   ];
 
   const coaches = [
     { id: 'c1', name: 'Kenji', level: 'Level 3 SAJ', bio: '專精粉雪與進階刻蝕', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=150' },
     { id: 'c2', name: 'Mika', level: 'CASI Level 2', bio: '新手親和，流暢溝通', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150' }
+  ];
+
+  const languageOptions = [
+    { id: 'en', label: 'EN' },
+    { id: 'zh-TW', label: 'ZH' },
+    { id: 'ja', label: 'JA' },
+    { id: 'zh-HK', label: 'HK' }
   ];
 
   return (
@@ -87,15 +94,15 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
           
           <div className="flex items-center gap-4 md:gap-8">
             <div className="hidden sm:flex items-center gap-3 text-[10px] font-bold text-white/40">
-              {['EN', 'ZH', 'JA', 'HK'].map((l, i) => (
-                <React.Fragment key={l}>
+              {languageOptions.map((lang, i) => (
+                <React.Fragment key={lang.id}>
                   <button 
-                    onClick={() => changeLanguage(l.toLowerCase() === 'zh' ? 'zh_TW' : l.toLowerCase() === 'hk' ? 'zh_HK' : l.toLowerCase())}
-                    className={`transition-colors duration-300 ${currentLng.toUpperCase().includes(l) ? 'text-accent-blue' : 'hover:text-white'}`}
+                    onClick={() => changeLanguage(lang.id)}
+                    className={`transition-colors duration-300 ${currentLng === lang.id ? 'text-accent-blue' : 'hover:text-white'}`}
                   >
-                    {l}
+                    {lang.label}
                   </button>
-                  {i < 3 && <span className="text-white/5 font-light">|</span>}
+                  {i < languageOptions.length - 1 && <span className="text-white/5 font-light">|</span>}
                 </React.Fragment>
               ))}
             </div>
@@ -155,7 +162,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                   <h4 className="text-2xl font-bold">{t('booking.step1')}</h4>
                 </div>
                 {selectedCourse && currentStep > 1 && (
-                  <button onClick={() => setCurrentStep(1)} className="text-accent-blue text-sm font-bold hover:underline">修改課程</button>
+                  <button onClick={() => setCurrentStep(1)} className="text-accent-blue text-sm font-bold hover:underline">{t('booking.modify_course')}</button>
                 )}
               </div>
 
@@ -181,7 +188,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                 <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
                   <div className="text-accent-blue text-3xl">✓</div>
                   <div>
-                    <p className="text-white/40 text-xs uppercase tracking-widest mb-1">已選擇課程</p>
+                    <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_course')}</p>
                     <p className="text-xl font-bold">{selectedCourse?.title[currentLng.startsWith('en') ? 'en_US' : 'zh_TW'] || selectedCourse?.title['zh_TW']}</p>
                   </div>
                 </div>
@@ -199,7 +206,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                     <h4 className="text-2xl font-bold">{t('booking.step2')}</h4>
                   </div>
                   {selectedSession && currentStep > 2 && (
-                    <button onClick={() => setCurrentStep(2)} className="text-accent-blue text-sm font-bold hover:underline">修改時間</button>
+                    <button onClick={() => setCurrentStep(2)} className="text-accent-blue text-sm font-bold hover:underline">{t('booking.modify_session')}</button>
                   )}
                 </div>
 
@@ -228,7 +235,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                   <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
                     <div className="text-accent-blue text-3xl">✓</div>
                     <div>
-                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">已選擇日期與時段</p>
+                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_session')}</p>
                       <p className="text-xl font-bold">2026/08/01 - {new Date(selectedSession?.startTime || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                     </div>
                   </div>
@@ -244,7 +251,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                 <div className="flex justify-between items-center mb-10">
                   <div className="flex items-center gap-4">
                     <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${currentStep === 3 ? 'bg-accent-blue text-black' : 'bg-white/10 text-white/40'}`}>03</span>
-                    <h4 className="text-2xl font-bold">選擇教練</h4>
+                    <h4 className="text-2xl font-bold">{t('booking.step3')}</h4>
                   </div>
                 </div>
 
@@ -266,7 +273,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                   <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
                     <div className="text-accent-blue text-3xl">✓</div>
                     <div>
-                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">已選擇教練</p>
+                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_coach')}</p>
                       <p className="text-xl font-bold">{selectedCoach?.name}</p>
                     </div>
                   </div>
@@ -280,26 +287,26 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
             <div className="glass rounded-4xl border border-accent-blue p-8 md:p-12 shadow-2xl animate-fade-in-up">
               <div className="flex items-center gap-4 mb-10">
                 <span className="w-10 h-10 rounded-full bg-accent-blue text-black flex items-center justify-center font-bold text-lg">04</span>
-                <h4 className="text-2xl font-bold">確認訂單與付款</h4>
+                <h4 className="text-2xl font-bold">{t('booking.step4')}</h4>
               </div>
               
               <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
                   <div className="p-8 rounded-3xl bg-white/5 space-y-4">
                     <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">課程</span>
+                      <span className="text-white/40">{t('booking.step1')}</span>
                       <span className="font-bold">{selectedCourse && (selectedCourse.title[currentLng.startsWith('en') ? 'en_US' : 'zh_TW'] || selectedCourse.title['zh_TW'])}</span>
                     </div>
                     <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">日期</span>
+                      <span className="text-white/40">{t('booking.step2')}</span>
                       <span className="font-bold">2026/08/01</span>
                     </div>
                     <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">教練</span>
+                      <span className="text-white/40">{t('booking.step3')}</span>
                       <span className="font-bold">{selectedCoach?.name}</span>
                     </div>
                     <div className="flex justify-between pt-4">
-                      <span className="text-xl font-bold">總計</span>
+                      <span className="text-xl font-bold">{t('booking.total')}</span>
                       <span className="text-3xl font-black text-accent-blue">{selectedCourse && getPrice(selectedCourse.price).val}</span>
                     </div>
                   </div>
@@ -307,7 +314,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
 
                 <div className="space-y-8">
                   <div className="space-y-4">
-                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">付款方式</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">{t('booking.payment_method')}</label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-6 rounded-2xl border border-accent-blue bg-accent-blue/10 flex flex-col items-center gap-2 cursor-pointer shadow-lg">
                         <div className="text-2xl">💳</div>
@@ -320,7 +327,7 @@ const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                   <button className="w-full py-6 bg-accent-blue text-black font-black tracking-[0.2em] rounded-3xl hover:glow-blue hover:scale-[1.02] transition-all shadow-2xl active:scale-95">
-                    立即支付並完成預約
+                    {t('booking.pay_now')}
                   </button>
                 </div>
               </div>

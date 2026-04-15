@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 const Step = ({ level, title, desc, delay, img, position, bottom }: { level: string; title: string; desc: string; delay: string, img: string, position?: string, bottom: string }) => (
   <div className={`relative flex-1 group transition-all duration-700 ease-in-out hover:flex-[2.5] overflow-hidden min-h-[400px] md:min-h-[500px] first:rounded-l-3xl last:rounded-r-3xl animate-fade-in-up ${delay}`}>
     <img 
-      src={img} 
+      src={img.startsWith('/') ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}${img}` : img} 
       alt={title} 
       className={`absolute inset-0 w-full h-full object-cover transition-transform duration-3000 group-hover:scale-110 ${position || 'object-top'}`}
     />
@@ -33,7 +33,7 @@ const ProgressionPath: React.FC = () => {
             {t('progression.label')}
           </h2>
           <h3 className="text-4xl md:text-5xl font-bold leading-tight">
-            從零到一，打造你的<span className="text-accent-blue italic">進化曲線</span>
+            {t('progression.title')}<span className="text-accent-blue italic">{t('progression.title_highlight')}</span>
           </h3>
         </div>
 

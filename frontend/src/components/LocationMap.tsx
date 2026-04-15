@@ -21,7 +21,7 @@ const LocationMap: React.FC = () => {
             <div className="absolute -inset-2 bg-accent-blue/10 blur-2xl rounded-full opacity-0 group-hover:opacity-30 transition-opacity"></div>
             <div className="relative z-10 w-full max-w-[500px] h-[450px] overflow-hidden rounded-3xl shadow-2xl border border-white/5">
               <img 
-                src="/images/japan_map.png" 
+                src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/japan_map.png`} 
                 alt="Japan Ski Map" 
                 className="w-full h-full object-cover object-top scale-100 group-hover:scale-105 transition-transform duration-700"
               />

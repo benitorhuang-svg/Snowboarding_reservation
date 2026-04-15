@@ -1,10 +1,15 @@
 # 滑雪課程預約系統 V2 (Professional Snowboarding System)
 
-[![CI/CD](https://github.com/your-repo/snowboarding/actions/workflows/deploy.yml/badge.svg)](https://github.com/your-repo/snowboarding/actions)
+[![CI/CD](https://github.com/benitorhuang-svg/Snowboarding_reservation/actions/workflows/deploy.yml/badge.svg)](https://github.com/benitorhuang-svg/Snowboarding_reservation/actions)
 ![License](https://img.shields.io/badge/license-UNLICENSED-red)
-![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D25.0.0-blue)
 
 本專案是一個從零打造的企業級滑雪預約平台，採用 **Clean Architecture** 與 **Event-Driven** 思維，特別針對「多國語系校正」與「高並行預約」進行了專家級優化。
+
+---
+
+## 🚀 PWA 訪問位址
+**[Snowboarding Coaching PWA](https://benitorhuang-svg.github.io/Snowboarding_reservation/)**
 
 ---
 
@@ -58,7 +63,7 @@ Snowboarding/
 ## 🏁 快速啟動 (Getting Started)
 
 ### 1. 前置需求
-*   Node.js v20+
+*   Node.js v25+
 *   pnpm v10+
 *   MySQL 8.0 資料庫實例
 

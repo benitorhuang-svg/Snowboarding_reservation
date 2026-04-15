@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 const FeatureCard = ({ title, desc, delay, img, icon }: { title: string; desc: string; delay: string; img: string; icon: React.ReactNode }) => (
   <div className={`relative overflow-hidden rounded-[2.5rem] group animate-fade-in-up ${delay} h-[450px]`}>
     <img 
-      src={img} 
+      src={img.startsWith('/') ? `${import.meta.env.BASE_URL.replace(/\/$/, '')}${img}` : img} 
       alt={title} 
       className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] transition-transform duration-1000 group-hover:scale-110 group-hover:grayscale-0"
     />

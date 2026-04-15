@@ -9,7 +9,7 @@ const Hero: React.FC = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat z-[-1]"
         style={{ 
-          backgroundImage: `linear-gradient(rgba(10, 12, 16, 0.4), rgba(10, 12, 16, 0.9)), url('/images/hero.png')` 
+          backgroundImage: `linear-gradient(rgba(10, 12, 16, 0.4), rgba(10, 12, 16, 0.9)), url('${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/hero.png')` 
         }}
       />
       <div className="max-w-5xl z-10 px-4">

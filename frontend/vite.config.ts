@@ -4,13 +4,14 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/Snowboarding_reservation/' : '/',
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icon-512.png'],
+      includeAssets: ['favicon.svg', 'icon-512.png'],
       manifest: {
         name: 'Snowboarding Coaching',
         short_name: 'Snowboard',
@@ -29,4 +30,4 @@ export default defineConfig({
       }
     })
   ],
-})
+}))

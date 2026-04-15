@@ -47,17 +47,15 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         <div className="flex items-center gap-3 text-[10px] font-bold tracking-widest text-white/40">
           {[
             { id: 'en', label: 'EN' },
-            { id: 'zh_TW', label: 'ZH' },
+            { id: 'zh-TW', label: 'ZH' },
             { id: 'ja', label: 'JA' },
-            { id: 'zh_HK', label: 'HK' }
+            { id: 'zh-HK', label: 'HK' }
           ].map((lang, index) => (
             <React.Fragment key={lang.id}>
               <button
                 onClick={() => changeLanguage(lang.id)}
                 className={`transition-colors duration-300 ${
-                  (currentLng === lang.id || (lang.id === 'zh_TW' && currentLng === 'zh')) 
-                  ? 'text-accent-blue' 
-                  : 'hover:text-white'
+                  currentLng === lang.id ? 'text-accent-blue' : 'hover:text-white'
                 }`}
               >
                 {lang.label}

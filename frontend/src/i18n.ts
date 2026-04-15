@@ -8,13 +8,21 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'zh_TW',
-    debug: false,
+    fallbackLng: 'zh-TW',
+    debug: true, // Enable debug to help diagnose issues
     interpolation: {
-      escapeValue: false, // React 已經針對 XSS 進行防護
+      escapeValue: false,
     },
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      // Ensure loadPath is correct regardless of BASE_URL trailing slash
+      loadPath: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/locales/{{lng}}/{{ns}}.json`,
+    },
+    supportedLngs: ['en', 'ja', 'zh-HK', 'zh-TW'],
+    nonExplicitSupportedLngs: true,
+    ns: ['translation'],
+    defaultNS: 'translation',
+    react: {
+      useSuspense: false, // Disable suspense as no boundary is provided
     },
   });
 

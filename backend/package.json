@@ -2,6 +2,9 @@
   "name": "backend",
   "version": "0.0.1",
   "description": "",
+  "engines": {
+    "node": ">=25"
+  },
   "author": "",
   "private": true,
   "license": "UNLICENSED",

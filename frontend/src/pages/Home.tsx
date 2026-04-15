@@ -20,7 +20,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       {/* Full Width Panoramic Image Divider */}
       <div className="w-full h-[400px] md:h-[600px] overflow-hidden relative">
         <img 
-          src="/images/hero.png" 
+          src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/hero.png`} 
           alt="Snowboarding Action" 
           className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-3000 ease-out"
         />

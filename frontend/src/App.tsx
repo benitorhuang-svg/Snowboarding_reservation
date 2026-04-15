@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './App.css';
-import './i18n';
 import Home from './pages/Home';
 import Calendar from './pages/Calendar';
 
