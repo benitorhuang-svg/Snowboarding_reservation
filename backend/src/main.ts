@@ -2,9 +2,23 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { BusinessExceptionFilter } from './common/filters/business-exception.filter';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import { LoggingWinston } from '@google-cloud/logging-winston';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const loggingWinston = new LoggingWinston({
+    projectId: process.env.GOOGLE_CLOUD_PROJECT || 'snowboarding-v2-dev',
+  });
+
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      level: 'info',
+      format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+      transports: [new winston.transports.Console(), loggingWinston],
+    }),
+  });
 
   // 1. 啟用 CORS (允許前端存取)
   app.enableCors();
@@ -18,7 +32,10 @@ async function bootstrap() {
     }),
   );
 
-  // 3. 配置 API 版本字首
+  // 3. 全域商務異常過濾器 (回傳 error_code)
+  app.useGlobalFilters(new BusinessExceptionFilter());
+
+  // 4. 配置 API 版本字首
   app.setGlobalPrefix('api/v1');
 
   // 4. Swagger OpenAPI 配置

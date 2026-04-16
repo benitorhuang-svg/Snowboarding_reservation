@@ -79,5 +79,40 @@
     "available_sessions": "Available Sessions",
     "full": "已額滿",
     "book_now": "預約"
+  },
+  "auth": {
+    "login_title": "歡迎回來",
+    "register_title": "加入旅程",
+    "login_subtitle": "登入您的帳號",
+    "register_subtitle": "建立新帳號",
+    "email": "電子郵件",
+    "password": "密碼",
+    "name": "真實姓名",
+    "mobile": "手機號碼",
+    "language": "偏好語系",
+    "skill_level": "滑雪程度",
+    "sign_in": "登入",
+    "sign_up": "註冊",
+    "processing": "處理中...",
+    "no_account": "還沒有帳號？立即註冊",
+    "have_account": "已有帳號？立即登入",
+    "or_continue": "或使用以下方式登入",
+    "back": "返回"
+  },
+  "dashboard": {
+    "hello": "你好,",
+    "journey_title": "您的滑雪進化儀表板",
+    "logout": "登出",
+    "total_lessons": "累計課程",
+    "next_session": "下次課程",
+    "skill_level": "當前等級",
+    "your_sessions": "我的預約",
+    "book_new": "預約新課程",
+    "loading": "正在載入您的旅程...",
+    "no_sessions": "尚無預約。準備好出發了嗎？",
+    "start_booking": "開始預約",
+    "member_since": "會員自 2026 年起",
+    "edit_profile": "編輯個人檔案",
+    "payment_methods": "支付方式"
   }
 }

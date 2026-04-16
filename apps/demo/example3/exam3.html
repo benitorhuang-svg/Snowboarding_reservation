@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÊªëÈõ™Ë∂?Ski Fun - ÁÆ°Á?‰∏≠Â?</title>
+    <!-- Â≠óÈ?Ë®≠Â? -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased font-['Noto_Sans_TC']">
+
+    <!-- ?ÄË°®ÊùøÂ§ñÂ±§ÂÆπÂô® -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- 1. Sidebar (Ê≤âÊµ∏ÂºèÂ?Ë¶? -->
+        <aside class="w-[280px] bg-[#0f172a] h-full flex flex-col shrink-0 transition-all duration-300">
+            <!-- Sidebar Header -->
+            <div class="p-8 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary p-2 rounded-lg shadow-lg">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-xl font-black text-white tracking-widest">‰∏≠Â§Æ?Ä??/span>
+                </div>
+            </div>
+
+            <!-- Role Selector (Ë∫´Â??áÊ?Ê®°Êì¨) -->
+            <div class="px-6 py-4">
+                <div class="bg-slate-800/50 p-1 rounded-xl flex">
+                    <button onclick="switchRole('member')" id="role-member" class="flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-white bg-primary shadow-sm">
+                        Â≠∏Âì°Ë¶ñË?
+                    </button>
+                    <button onclick="switchRole('admin')" id="role-admin" class="flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-slate-400 hover:text-white">
+                        ÁÆ°Á???                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-6 py-6 space-y-1 overflow-y-auto">
+                <div class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 pl-3">?∏Â?ÁÆ°Á?</div>
+                
+                <a href="#" class="flex items-center gap-4 px-4 py-3 bg-primary/10 text-primary border-r-4 border-primary rounded-l-lg group transition-all">
+                    <i data-lucide="gauge" class="w-5 h-5"></i>
+                    <span class="font-bold text-[15px]">Á∏ΩË¶Ω?ÄË°®Êùø</span>
+                </a>
+                
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg group transition-all">
+                    <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+                    <span class="font-bold text-[15px]">?êÁ?Ë°åÁ?Ë°?/span>
+                </a>
+
+                <div class="admin-only hidden pt-6 animate-in slide-in-from-left-2 duration-300">
+                    <div class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 pl-3">Á≥ªÁµ±Ê¨äÈ?</div>
+                    <a href="#" class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        <span class="font-bold text-[15px]">?®Êà∂/?ôÁ∑¥ÁÆ°Á?</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                        <span class="font-bold text-[15px]">?üÊî∂?±Ë°®</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="p-6 border-t border-slate-800/50">
+                <div class="flex items-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" class="w-10 h-10 rounded-full border-2 border-slate-700 shadow-sm">
+                    <div class="grow">
+                        <div id="user-name" class="text-[14px] font-bold text-white leading-none mb-1">Ken (Â≠∏Âì°)</div>
+                        <div class="text-[11px] text-slate-500">Premium Member</div>
+                    </div>
+                    <button class="text-slate-500 hover:text-red-400 transition-colors">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 2. Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Top Header -->
+            <header class="h-[80px] bg-white border-b border-slate-200 px-10 flex items-center justify-between shrink-0">
+                <div>
+                    <h2 id="page-title" class="text-[22px] font-black text-slate-800">Ê≠°Ë??û‰?, Ken!</h2>
+                    <p class="text-[13px] text-slate-400">?ôÊòØ?®ÁõÆ?çÁ??êÁ??≤Â∫¶?áÂ≠∏ÁøíÊ≠∑Á®ã„Ä?/p>
+                </div>
+                
+                <div class="flex items-center gap-8">
+                    <!-- Notifications -->
+                    <div class="relative cursor-pointer group">
+                        <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/5 group-hover:text-primary transition-all">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 border-2 border-white rounded-full text-[10px] text-white flex items-center justify-center font-bold">3</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Section -->
+            <section id="main-scroll-area" class="flex-1 overflow-y-auto p-10 space-y-8 bg-[#f8fafc]">
+                
+                <!-- KPI Section (Dynamic Based on Role) -->
+                <div id="kpi-container" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <!-- Member KPIs -->
+                    <div class="member-view bg-white p-7 rounded-4xl border border-slate-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-primary"><i data-lucide="calendar" class="w-6 h-6"></i></div>
+                            <span class="text-[11px] font-black uppercase tracking-widest text-slate-400">Bookings</span>
+                        </div>
+                        <div class="text-[32px] font-black text-slate-900 mb-1">3 Á≠?/div>
+                        <div class="text-sm text-slate-400">?ÆÂ?Á≠âÂ??ÉÂ??ÑË™≤Á®?/div>
+                    </div>
+
+                    <div class="member-view bg-white p-7 rounded-4xl border border-slate-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500"><i data-lucide="award" class="w-6 h-6"></i></div>
+                            <span class="text-[11px] font-black uppercase tracking-widest text-slate-400">Status</span>
+                        </div>
+                        <div class="text-[32px] font-black text-slate-900 mb-1">Lv.2 ?ùÈ?</div>
+                        <div class="text-sm text-slate-400">Ë∑ùÈõ¢‰∏≠È??ÑÂ∑Æ 4 ?ÇË™≤</div>
+                    </div>
+
+                    <!-- Admin KPIs (Hidden Initially) -->
+                    <div class="admin-view hidden bg-[#0f172a] p-7 rounded-4xl shadow-xl text-white">
+                        <div class="flex justify-between items-start mb-6 text-slate-400">
+                            <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
+                            <span class="text-[11px] font-black uppercase tracking-widest">Revenue</span>
+                        </div>
+                        <div class="text-[32px] font-black mb-1">NT$ 42,500</div>
+                        <div class="text-sm text-slate-500">?¨Ê??êË??üÊî∂Á∏ΩÈ?</div>
+                    </div>
+                </div>
+
+                <!-- Revenue Chart (Admin Only) -->
+                <div class="admin-view hidden bg-white rounded-5xl border border-slate-100 shadow-sm p-10 mb-8 overflow-hidden relative">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h3 class="text-[18px] font-bold text-slate-800">Ë∂®Âã¢?ÜÊ?</h3>
+                            <p class="text-[13px] text-slate-400">Á≥ªÁµ±?üÊî∂?áÁî®?∂Â??∑Ë∂®?¢Â?</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[11px] font-bold">?üÊî∂ (+12%)</span>
+                            <span class="px-3 py-1 bg-slate-50 text-slate-400 rounded-lg text-[11px] font-bold">?êÁ???/span>
+                        </div>
+                    </div>
+                    <div class="h-[300px] w-full">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Main Section: List of Bookings / Activities -->
+                <div class="bg-white rounded-5xl border border-slate-100 shadow-sm overflow-hidden min-h-[500px]">
+                    <div class="px-10 py-8 border-b border-slate-50 flex justify-between items-center">
+                        <div>
+                            <h3 id="list-title" class="text-[18px] font-bold text-slate-800">ËøëÊ?Ê¥ªÂ??êÁ?</h3>
+                            <p class="text-[13px] text-slate-400">ÁÆ°Á??®Á?ÊªëÈõ™Ë°åÁ??áË™≤Á®ãÊ≠∑??/p>
+                        </div>
+                        <button class="text-primary font-bold text-sm hover:underline">?•Á??®Ë°®</button>
+                    </div>
+                    
+                    <div id="data-list" class="p-4 overflow-x-auto">
+                        <!-- Table or List will go here -->
+                        <div id="empty-state" class="flex flex-col items-center justify-center py-20 text-slate-300">
+                            <i data-lucide="clipboard-list" class="w-16 h-16 mb-4 opacity-20"></i>
+                            <span class="text-sm font-medium">ËºâÂÖ•?∏Ê?‰∏?..</span>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const state = {
+            role: 'member',
+            user: { name: 'Ken', rank: 'Â≠∏Âì°' }
+        };
+
+        function switchRole(role) {
+            state.role = role;
+            
+            // UI Toggle
+            const isMember = role === 'member';
+            const memberBtn = document.getElementById('role-member');
+            const adminBtn = document.getElementById('role-admin');
+            
+            if(isMember) {
+                memberBtn.className = "flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-white bg-primary";
+                adminBtn.className = "flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-slate-400 hover:text-white";
+                document.getElementById('user-name').innerText = "Ken (Â≠∏Âì°)";
+                document.getElementById('page-title').innerText = "Ê≠°Ë??û‰?, Ken!";
+                document.getElementById('list-title').innerText = "ËøëÊ?Ê¥ªÂ??êÁ?";
+                document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.admin-view').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.member-view').forEach(el => el.classList.remove('hidden'));
+            } else {
+                adminBtn.className = "flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-white bg-primary";
+                memberBtn.className = "flex-1 py-2 text-[13px] font-bold rounded-lg transition-all text-slate-400 hover:text-white";
+                document.getElementById('user-name').innerText = "Admin (ÁÆ°Á???";
+                document.getElementById('page-title').innerText = "Á≥ªÁµ±?ßÂà∂??;
+                document.getElementById('list-title').innerText = "?®Á≥ªÁµ±È?Á¥ÑÁõ£??;
+                document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+                document.querySelectorAll('.admin-view').forEach(el => el.classList.remove('hidden'));
+                document.querySelectorAll('.member-view').forEach(el => el.classList.add('hidden'));
+            }
+            
+            renderData();
+        }
+
+        function renderData() {
+            const dest = document.getElementById('data-list');
+            
+            if (state.role === 'member') {
+                dest.innerHTML = `
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[12px] font-black text-slate-400 uppercase tracking-widest">
+                                <th class="px-6 py-4">Â∞éÂ∏´/Ë™≤Á?</th>
+                                <th class="px-6 py-4">?êÁ??•Ê?</th>
+                                <th class="px-6 py-4">?Ä??/th>
+                                <th class="px-6 py-4">?ëÈ?</th>
+                                <th class="px-6 py-4 text-right">ÁÆ°Á?</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-4">
+                                        <img src="../example2/ken.jpg" onerror="this.src='https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80'" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="font-black text-slate-800 text-[14px]">Ken ?ôÁ∑¥</div>
+                                            <div class="text-[11px] text-slate-400">?ÆÊùø SB ?ùÁ?Ë™≤Á?</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="text-[14px] font-bold text-slate-700">2026/12/10</div>
+                                    <div class="text-[11px] text-slate-400">08:00 - 12:00</div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[11px] font-black">Â∑≤‰?Ê¨?/span>
+                                </td>
+                                <td class="px-6 py-5 font-bold text-slate-900">NT$ 12,000</td>
+                                <td class="px-6 py-5 text-right">
+                                    <button class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary/10 hover:text-primary transition-all">
+                                        <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                dest.innerHTML = `
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[12px] font-black text-slate-400 uppercase tracking-widest">
+                                <th class="px-6 py-4">?êÁ?Â≠∏Âì°</th>
+                                <th class="px-6 py-4">?•Ê??ÇÂàª</th>
+                                <th class="px-6 py-4">Ë™≤Á??áÂ?Â∏?/th>
+                                <th class="px-6 py-4 text-right">?ç‰?</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-[14px]">BE</div>
+                                        <div>
+                                            <div class="font-black text-slate-800 text-[14px]">Benito Huang</div>
+                                            <div class="text-[11px] text-slate-400">benito@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5 font-bold text-slate-700">12/10 08:00</td>
+                                <td class="px-6 py-5">
+                                    <div class="text-[14px] text-slate-700 font-medium">Ken / ?ùÁ? SB</div>
+                                </td>
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[12px] font-bold hover:bg-blue-600 hover:text-white transition-all">?∏Èä∑</button>
+                                        <button class="bg-slate-50 text-slate-400 p-1.5 rounded-lg hover:text-red-500 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+            
+            if(window.lucide) lucide.createIcons();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['12/01', '12/05', '12/10', '12/15', '12/20', '12/25', '12/31'],
+                    datasets: [{
+                        label: '?üÊî∂Ë∂®Âã¢',
+                        data: [12000, 19000, 3000, 25000, 22000, 30000, 42500],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#2563eb',
+                        pointHoverBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if(window.lucide) lucide.createIcons();
+            renderData();
+            initChart();
+        });
+    </script>
+</body>
+</html>

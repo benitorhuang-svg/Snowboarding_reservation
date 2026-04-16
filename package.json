@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"pnpm --filter backend run start:dev\" \"pnpm --filter frontend run dev\"",
+    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\" \"pnpm run dev:demo\"",
     "dev:backend": "pnpm --filter backend run start:dev",
     "dev:frontend": "pnpm --filter frontend run dev",
+    "dev:demo": "concurrently \"pnpm exec vite apps/demo\" \"pnpm exec tailwindcss -i apps/demo/input.css -o apps/demo/style.css --watch\"",
     "install:all": "pnpm install -r",
+    "build": "pnpm --filter \"*\" build",
     "prisma:generate": "pnpm --filter backend exec prisma generate",
     "prisma:push": "pnpm --filter backend exec prisma db push",
+    "lint": "pnpm --filter \"*\" run lint",
+    "clean": "powershell ./scripts/manage.ps1 clean",
+    "manage": "powershell ./scripts/manage.ps1",
     "prepare": "husky"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0"
+    "lint-staged": "^16.4.0",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.8"
   }
 }

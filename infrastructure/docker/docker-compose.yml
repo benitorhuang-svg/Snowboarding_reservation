@@ -1,0 +1,96 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: snowboarding_v2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: mysql://user:password@db:3306/snowboarding_v2
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your_jwt_secret
+      TAPPAY_PARTNER_KEY: your_tappay_partner_key
+      TAPPAY_MERCHANT_ID: your_tappay_merchant_id
+    depends_on:
+      - db
+      - redis
+
+  frontend:
+    build: ./frontend
+    restart: always
+    depends_on:
+      - backend
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+
+  db-backup:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_PWD: password
+    volumes:
+      - ./backups:/backups
+    # Run cron job in foreground or just sleep loop that runs mysqldump every 24h
+    command: >
+      sh -c '
+        echo "Starting DB Backup Service..."
+        while true; do
+          sleep 86400
+          DATE=$$(date +%Y%m%d%H%M%S)
+          echo "Backing up snowboarding_v2 at $$DATE"
+          mysqldump -h db -u user snowboarding_v2 > /backups/db_backup_$$DATE.sql
+          # Remove older than 30 days
+          find /backups -type f -name "*.sql" -mtime +30 -exec rm {} \;
+        done
+      '
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 300M
+    ports:
+      - '8080:80'
+
+volumes:
+  mysql_data:
+  redis_data:
+  caddy_data:
+  caddy_config:

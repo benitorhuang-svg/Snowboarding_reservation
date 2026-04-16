@@ -79,5 +79,40 @@
     "available_sessions": "Available Sessions",
     "full": "Full",
     "book_now": "Book Now"
+  },
+  "auth": {
+    "login_title": "WELCOME BACK",
+    "register_title": "JOIN THE RIDE",
+    "login_subtitle": "Sign in to your account",
+    "register_subtitle": "Create a new account",
+    "email": "Email Address",
+    "password": "Password",
+    "name": "Full Name",
+    "mobile": "Mobile Phone",
+    "language": "Language",
+    "skill_level": "Skill Level",
+    "sign_in": "SIGN IN",
+    "sign_up": "SIGN UP",
+    "processing": "PROCESSING...",
+    "no_account": "DON'T HAVE AN ACCOUNT? SIGN UP",
+    "have_account": "ALREADY HAVE AN ACCOUNT? SIGN IN",
+    "or_continue": "Or continue with",
+    "back": "BACK"
+  },
+  "dashboard": {
+    "hello": "HELLO",
+    "journey_title": "Your Alpine Journey Dashboard",
+    "logout": "LOGOUT",
+    "total_lessons": "Total Lessons",
+    "next_session": "Next Session",
+    "skill_level": "Skill Level",
+    "your_sessions": "YOUR SESSIONS",
+    "book_new": "Book New Lesson",
+    "loading": "Loading your journey...",
+    "no_sessions": "No sessions found. Ready to hit the slopes?",
+    "start_booking": "START BOOKING",
+    "member_since": "MEMBER SINCE 2026",
+    "edit_profile": "EDIT PROFILE",
+    "payment_methods": "PAYMENT METHODS"
   }
 }

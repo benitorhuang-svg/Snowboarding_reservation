@@ -1,5 +1,6 @@
 {
   "frontend/src/**/*.{js,jsx,ts,tsx}": [
     "pnpm --filter frontend exec eslint --fix"
-  ]
+  ],
+  "backend/src/**/*.ts": ["pnpm --filter backend exec eslint --fix"]
 }

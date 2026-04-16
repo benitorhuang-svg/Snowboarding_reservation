@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-secondary: #f97316;
+    --color-secondary-hover: #ea580c;
+  }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #f8fafc;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+}
+
+@layer components {
+  .radio-card-input:checked + .radio-card {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+    box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.15);
+  }
+  .radio-card-input:checked + .radio-card .check-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

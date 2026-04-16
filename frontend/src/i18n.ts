@@ -17,8 +17,10 @@ i18n
       // Ensure loadPath is correct regardless of BASE_URL trailing slash
       loadPath: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/locales/{{lng}}/{{ns}}.json`,
     },
-    supportedLngs: ['en', 'ja', 'zh-HK', 'zh-TW'],
-    nonExplicitSupportedLngs: true,
+    supportedLngs: ['en', 'ja', 'zh-hk', 'zh-tw'],
+    lowerCaseLng: true,
+    nonExplicitSupportedLngs: false,
+    load: 'currentOnly',
     ns: ['translation'],
     defaultNS: 'translation',
     react: {

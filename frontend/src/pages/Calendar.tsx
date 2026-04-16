@@ -1,338 +1,509 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import TappayPayment from '../features/booking/TappayPayment';
+import CountdownTimer from '../components/CountdownTimer';
+import { api } from '../services/api';
+import { motion, AnimatePresence } from 'framer-motion';
+import { GlassCard } from '../components/ui/GlassCard';
+import { useNotification } from '../hooks/useNotification';
 
 interface Course {
   id: string;
   title: Record<string, string>;
-  price: number;
+  description: Record<string, string>;
+  basePrice: number;
 }
 
 interface Session {
   id: string;
   startTime: string;
+  endTime: string;
   capacity: number;
   bookedCount: number;
+  course: Course;
+  coach: { user: { name: string; email: string } };
 }
 
-const fetchCourses = (): Promise<Course[]> => Promise.resolve([
-  { id: '1', title: { zh_TW: '初階單板體驗 (4H)', en_US: 'Beginner Snowboard (4H)' }, price: 55000 },
-  { id: '2', title: { zh_TW: '進階單板特訓 (Full Day)', en_US: 'Advanced Ski (Full Day)' }, price: 98000 },
-]);
-
-const fetchSessions = (courseId: string): Promise<Session[]> => {
-  console.log('Fetching sessions for course:', courseId);
-  return Promise.resolve([
-    { id: 's1', startTime: '2026-08-01T09:00:00Z', capacity: 4, bookedCount: 1 },
-    { id: 's2', startTime: '2026-08-01T14:00:00Z', capacity: 4, bookedCount: 4 },
-    { id: 's3', startTime: '2026-08-02T10:00:00Z', capacity: 4, bookedCount: 0 },
-  ]);
-};
+interface Order {
+  id: string;
+  totalAmount: number;
+  status: string;
+}
 
 interface CalendarProps {
-  onNavigate: () => void;
+  onNavigate?: () => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onNavigate }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
+  const { notify } = useNotification();
+  const currentLang = i18n.language;
+
   const [currentStep, setCurrentStep] = useState(1);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [selectedCoach, setSelectedCoach] = useState<{ id: string; name: string } | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
-  const currentLng = i18n.language;
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const uniqueDates = React.useMemo(() => {
+    const dates = sessions.map((s) => new Date(s.startTime).toLocaleDateString());
+    return Array.from(new Set(dates)).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+    );
+  }, [sessions]);
 
   useEffect(() => {
-    fetchCourses().then(setCourses);
-  }, []);
-
-  useEffect(() => {
-    if (selectedCourse) {
-      fetchSessions(selectedCourse.id).then(setSessions);
+    if (uniqueDates.length > 0 && !selectedDate) {
+      setSelectedDate(uniqueDates[0]);
     }
-  }, [selectedCourse]);
+  }, [uniqueDates, selectedDate]);
 
-  const getPrice = (jpy: number) => {
-    const twd = Math.round(jpy * 0.21);
-    const usd = Math.round(jpy * 0.0066);
-    if (currentLng === 'ja') return { val: `¥${jpy.toLocaleString()}`, ref: `$${usd}` };
-    if (currentLng.startsWith('en')) return { val: `$${usd}`, ref: `¥${jpy.toLocaleString()}` };
-    return { val: `TWD ${twd.toLocaleString()}`, ref: `$${usd}` };
+  const sessionsForSelectedDate = React.useMemo(() => {
+    if (!selectedDate) return [];
+    return sessions.filter(
+      (s) => new Date(s.startTime).toLocaleDateString() === selectedDate,
+    );
+  }, [sessions, selectedDate]);
+
+  const fetchCourses = React.useCallback(async () => {
+    try {
+      const data = await api.getCourses();
+      setCourses(data.items);
+    } catch {
+      notify('Failed to load courses', 'error');
+    }
+  }, [notify]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
+  const handleCourseSelect = async (course: Course) => {
+    setSelectedCourse(course);
+    setIsLoading(true);
+    try {
+      const data = await api.getSessions({ courseId: course.id });
+      setSessions(data);
+      if (data.length > 0) {
+        const firstDate = new Date(data[0].startTime).toLocaleDateString();
+        setSelectedDate(firstDate);
+      }
+      setCurrentStep(2);
+    } catch {
+      notify('Failed to load slots', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const steps = [
-    { num: 1, label: t('booking.step1') },
-    { num: 2, label: t('booking.step2') },
-    { num: 3, label: t('booking.step3') },
-    { num: 4, label: t('booking.step4') }
-  ];
+  const handleBooking = async () => {
+    if (!selectedSession) return;
+    setIsLoading(true);
+    try {
+      const order = await api.createBooking([selectedSession.id]);
+      setCurrentOrder(order as Order);
+      setCurrentStep(4);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      notify(err.response?.data?.message || 'Booking failed', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const coaches = [
-    { id: 'c1', name: 'Kenji', level: 'Level 3 SAJ', bio: '專精粉雪與進階刻蝕', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=150' },
-    { id: 'c2', name: 'Mika', level: 'CASI Level 2', bio: '新手親和，流暢溝通', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150' }
-  ];
-
-  const languageOptions = [
-    { id: 'en', label: 'EN' },
-    { id: 'zh-TW', label: 'ZH' },
-    { id: 'ja', label: 'JA' },
-    { id: 'zh-HK', label: 'HK' }
-  ];
+  const handlePaymentSuccess = () => {
+    notify('Payment successful!', 'success');
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-bg-dark pb-32">
-      {/* 1. Unified Dual-Layer Header */}
-      <header className="fixed top-0 left-0 w-full z-110 bg-bg-dark/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
-        {/* Top Layer: Branding & Actions */}
-        <div className="h-20 md:h-24 px-[5%] flex justify-between items-center border-b border-white/5">
-          <div onClick={onNavigate} className="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-1 cursor-pointer group">
-            <span className="text-white group-hover:text-accent-blue transition-colors">SNOW</span>
-            <span className="text-accent-blue group-hover:text-white transition-colors">BOARDING</span>
-          </div>
-          
-          <div className="flex items-center gap-4 md:gap-8">
-            <div className="hidden sm:flex items-center gap-3 text-[10px] font-bold text-white/40">
-              {languageOptions.map((lang, i) => (
-                <React.Fragment key={lang.id}>
-                  <button 
-                    onClick={() => changeLanguage(lang.id)}
-                    className={`transition-colors duration-300 ${currentLng === lang.id ? 'text-accent-blue' : 'hover:text-white'}`}
-                  >
-                    {lang.label}
-                  </button>
-                  {i < languageOptions.length - 1 && <span className="text-white/5 font-light">|</span>}
-                </React.Fragment>
-              ))}
-            </div>
-            <button onClick={onNavigate} className="text-white/50 transition-all text-[10px] md:text-[11px] font-bold tracking-widest border border-white/10 px-4 md:px-6 py-2 rounded-full hover:border-accent-blue hover:text-accent-blue">
-              {t('booking.back_home')}
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#050505] pt-32 pb-20 px-[5%] text-white">
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[-10%] w-[40%] h-[40%] bg-[#00F0FF]/5 rounded-full blur-[120px]"></div>
+      </div>
 
-        {/* Bottom Layer: Adaptive Stepper */}
-        <div className="h-16 md:h-20 bg-white/2 flex items-center">
-          <div className="max-w-6xl mx-auto w-full px-[5%] flex justify-between items-center gap-2 md:gap-4">
-            {steps.map((s, i) => (
-              <React.Fragment key={s.num}>
-                <div 
-                  className={`flex items-center gap-2 md:gap-4 transition-all duration-700 cursor-pointer group ${currentStep >= s.num ? 'opacity-100' : 'opacity-20'}`}
-                  onClick={() => currentStep > s.num && setCurrentStep(s.num)}
-                >
-                  <div className={`relative w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center text-[10px] md:text-xs font-bold border transition-all duration-500 shrink-0 ${
-                    currentStep === s.num ? 'bg-accent-blue border-accent-blue text-black glow-blue scale-110' : 
-                    currentStep > s.num ? 'bg-white border-white text-black' : 'border-white/20 text-white group-hover:border-white/50'
-                  }`}>
-                    {currentStep > s.num ? '✓' : s.num}
-                    {currentStep === s.num && <div className="absolute inset-0 rounded-full bg-accent-blue animate-ping opacity-20"></div>}
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex justify-between items-center mb-16 px-4 max-w-4xl mx-auto">
+          <button
+            onClick={() => onNavigate?.()}
+            className="flex items-center gap-2 text-[10px] font-black tracking-widest text-[#00F0FF] border border-[#00F0FF]/30 px-4 py-2 rounded-full hover:bg-[#00F0FF]/10 transition-all"
+          >
+            ??HOME
+          </button>
+          <div className="flex flex-1 justify-around">
+            {[1, 2, 3, 4].map((step) => (
+              <React.Fragment key={step}>
+                <div className="flex flex-col items-center gap-3">
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center font-black transition-all duration-500 border ${
+                      currentStep >= step
+                        ? 'bg-[#00F0FF] text-black border-[#00F0FF] shadow-[0_0_20px_rgba(0,240,255,0.4)]'
+                        : 'bg-white/5 text-white/20 border-white/10'
+                    }`}
+                  >
+                    {step}
                   </div>
-                  
-                  <div className="hidden lg:flex flex-col">
-                    <span className="text-[8px] font-medium tracking-[0.2em] text-white/40 uppercase">Phase 0{s.num}</span>
-                    <span className="text-[9px] font-bold tracking-widest text-white uppercase whitespace-nowrap">{s.label}</span>
-                  </div>
-                  {/* Small Screen Labels */}
-                  <div className="lg:hidden flex flex-col">
-                    <span className="text-[7px] font-medium tracking-widest text-white/40">P0{s.num}</span>
-                    {currentStep === s.num && <span className="text-[7px] font-extrabold text-accent-blue uppercase truncate max-w-[40px]">{s.label.split(' ')[0]}</span>}
-                  </div>
+                  <span
+                    className={`text-[10px] font-black tracking-[0.2em] uppercase ${currentStep >= step ? 'text-[#00F0FF]' : 'text-white/20'}`}
+                  >
+                    Step 0{step}
+                  </span>
                 </div>
-                
-                {i < steps.length - 1 && (
-                  <div className="flex-1 h-px bg-white/5 min-w-[8px] relative">
-                    <div className={`absolute inset-0 bg-accent-blue transition-all duration-1000 origin-left ${currentStep > s.num ? 'scale-x-100' : 'scale-x-0'}`}></div>
-                  </div>
+                {step < 4 && (
+                  <div
+                    className={`flex-1 h-px mt-6 mx-4 transition-colors duration-700 ${currentStep > step ? 'bg-[#00F0FF]/50' : 'bg-white/10'}`}
+                  ></div>
                 )}
               </React.Fragment>
             ))}
           </div>
         </div>
-      </header>
 
-      <div className="max-w-6xl mx-auto pt-48 px-[5%]">
-        <div className="space-y-10">
-          {/* Step 1: Course Selection Card */}
-          <div className={`glass rounded-4xl border transition-all duration-700 overflow-hidden ${currentStep === 1 ? 'border-accent-blue shadow-2xl scale-[1.02]' : 'border-white/5 opacity-80'}`}>
-            <div className="p-8 md:p-12">
-              <div className="flex justify-between items-center mb-10">
-                <div className="flex items-center gap-4">
-                  <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${currentStep === 1 ? 'bg-accent-blue text-black' : 'bg-white/10 text-white/40'}`}>01</span>
-                  <h4 className="text-2xl font-bold">{t('booking.step1')}</h4>
-                </div>
-                {selectedCourse && currentStep > 1 && (
-                  <button onClick={() => setCurrentStep(1)} className="text-accent-blue text-sm font-bold hover:underline">{t('booking.modify_course')}</button>
-                )}
-              </div>
-
-              {currentStep === 1 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {courses.map(course => {
-                    const price = getPrice(course.price);
-                    return (
-                      <div key={course.id} onClick={() => { setSelectedCourse(course); setCurrentStep(2); }}
-                           className="p-10 rounded-3xl border border-white/5 bg-white/5 hover:border-accent-blue/50 hover:bg-white/8 transition-all cursor-pointer group">
-                        <h5 className="font-bold text-2xl mb-6 group-hover:text-accent-blue transition-colors">
-                          {course.title[currentLng.startsWith('en') ? 'en_US' : 'zh_TW'] || course.title['zh_TW']}
-                        </h5>
-                        <div className="space-y-1">
-                          <p className="text-3xl font-black">{price.val}</p>
-                          <p className="text-[10px] text-white/30 uppercase tracking-widest">Approx. {price.ref}</p>
+        <div className="grid lg:grid-cols-3 gap-10 items-start">
+          <div className="lg:col-span-2 space-y-8">
+            <AnimatePresence mode="wait">
+              {currentStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <h2 className="text-3xl font-black tracking-tight text-white mb-8 italic uppercase">
+                    SELECT COURSE{' '}
+                    <span className="text-white/20 ml-2 font-light lowercase">
+                      Select Path
+                    </span>
+                  </h2>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {courses.map((course) => (
+                      <GlassCard
+                        key={course.id}
+                        onClick={() => handleCourseSelect(course)}
+                        className={`cursor-pointer group relative overflow-hidden ${
+                          selectedCourse?.id === course.id
+                            ? 'border-[#00F0FF] shadow-[0_0_30px_rgba(0,240,255,0.15)]'
+                            : ''
+                        }`}
+                      >
+                        <h4 className="text-xl font-black mb-4 text-white uppercase tracking-tight italic">
+                          {(course.title as Record<string, string>)[currentLang] ||
+                            (course.title as Record<string, string>)['zh-tw']}
+                        </h4>
+                        <p className="text-white/40 text-xs leading-relaxed mb-8 line-clamp-2">
+                          {(course.description as Record<string, string>)[currentLang] ||
+                            (course.description as Record<string, string>)['zh-tw']}
+                        </p>
+                        <div className="flex justify-between items-end">
+                          <div>
+                            <span className="text-white/20 text-[10px] font-bold block uppercase mb-1">
+                              Price
+                            </span>
+                            <span className="text-[#00F0FF] font-black text-2xl italic">
+                              NT$ {course.basePrice.toLocaleString()}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-black text-white/40 group-hover:text-[#00F0FF] transition-colors tracking-[0.3em] uppercase">
+                            Enter
+                          </span>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
-                  <div className="text-accent-blue text-3xl">✓</div>
-                  <div>
-                    <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_course')}</p>
-                    <p className="text-xl font-bold">{selectedCourse?.title[currentLng.startsWith('en') ? 'en_US' : 'zh_TW'] || selectedCourse?.title['zh_TW']}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Step 2: Date & Session */}
-          {currentStep >= 2 && (
-            <div className={`glass rounded-4xl border transition-all duration-700 overflow-hidden ${currentStep === 2 ? 'border-accent-blue shadow-2xl scale-[1.02]' : 'border-white/5 opacity-80'}`}>
-              <div className="p-8 md:p-12">
-                <div className="flex justify-between items-center mb-10">
-                  <div className="flex items-center gap-4">
-                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${currentStep === 2 ? 'bg-accent-blue text-black' : 'bg-white/10 text-white/40'}`}>02</span>
-                    <h4 className="text-2xl font-bold">{t('booking.step2')}</h4>
-                  </div>
-                  {selectedSession && currentStep > 2 && (
-                    <button onClick={() => setCurrentStep(2)} className="text-accent-blue text-sm font-bold hover:underline">{t('booking.modify_session')}</button>
-                  )}
-                </div>
-
-                {currentStep === 2 ? (
-                  <div className="space-y-12">
-                     <div className="grid grid-cols-7 gap-4">
-                      {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(d => <div key={d} className="text-center text-[10px] font-bold text-white/30 tracking-widest">{d}</div>)}
-                      {Array.from({ length: 31 }, (_, i) => i + 1).map(date => (
-                        <div key={date} className={`aspect-square rounded-2xl border flex flex-col items-center justify-center transition-all cursor-pointer ${date <= 2 ? 'border-accent-blue/30 bg-accent-blue/5 hover:bg-accent-blue/20' : 'border-white/5 text-white/10'}`}>
-                          <span className="text-lg font-bold">{date}</span>
-                          {date <= 2 && <div className="w-1.5 h-1.5 rounded-full bg-accent-blue mt-1"></div>}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {sessions.map(s => (
-                        <div key={s.id} onClick={() => { setSelectedSession(s); setCurrentStep(3); }}
-                             className="p-8 rounded-2xl border border-white/5 bg-white/5 hover:border-accent-blue/50 transition-all cursor-pointer text-center group">
-                          <p className="text-2xl font-bold mb-2 group-hover:text-accent-blue transition-colors">{new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                          <p className="text-[10px] text-white/30 uppercase tracking-widest">餘位: {s.capacity - s.bookedCount}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
-                    <div className="text-accent-blue text-3xl">✓</div>
-                    <div>
-                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_session')}</p>
-                      <p className="text-xl font-bold">2026/08/01 - {new Date(selectedSession?.startTime || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Coach Selection */}
-          {currentStep >= 3 && (
-            <div className={`glass rounded-4xl border transition-all duration-700 overflow-hidden ${currentStep === 3 ? 'border-accent-blue shadow-2xl scale-[1.02]' : 'border-white/5 opacity-80'}`}>
-              <div className="p-8 md:p-12">
-                <div className="flex justify-between items-center mb-10">
-                  <div className="flex items-center gap-4">
-                    <span className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${currentStep === 3 ? 'bg-accent-blue text-black' : 'bg-white/10 text-white/40'}`}>03</span>
-                    <h4 className="text-2xl font-bold">{t('booking.step3')}</h4>
-                  </div>
-                </div>
-
-                {currentStep === 3 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {coaches.map(coach => (
-                      <div key={coach.id} onClick={() => { setSelectedCoach(coach); setCurrentStep(4); }}
-                           className="flex gap-8 p-10 rounded-3xl border border-white/5 bg-white/5 hover:border-accent-blue/50 hover:bg-white/8 transition-all cursor-pointer group">
-                        <img src={coach.avatar} className="w-24 h-24 rounded-full border-scale-110 object-cover" />
-                        <div>
-                          <h5 className="font-bold text-2xl group-hover:text-accent-blue transition-colors">{coach.name}</h5>
-                          <p className="text-accent-blue text-xs font-bold mb-3 tracking-widest">{coach.level}</p>
-                          <p className="text-white/40 text-sm leading-relaxed">{coach.bio}</p>
-                        </div>
-                      </div>
+                      </GlassCard>
                     ))}
                   </div>
-                ) : (
-                  <div className="flex items-center gap-6 p-6 rounded-2xl bg-white/5">
-                    <div className="text-accent-blue text-3xl">✓</div>
-                    <div>
-                      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('booking.selected_coach')}</p>
-                      <p className="text-xl font-bold">{selectedCoach?.name}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+                </motion.div>
+              )}
 
-          {/* Step 4: Checkout */}
-          {currentStep === 4 && (
-            <div className="glass rounded-4xl border border-accent-blue p-8 md:p-12 shadow-2xl animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-10">
-                <span className="w-10 h-10 rounded-full bg-accent-blue text-black flex items-center justify-center font-bold text-lg">04</span>
-                <h4 className="text-2xl font-bold">{t('booking.step4')}</h4>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-12">
-                <div className="space-y-6">
-                  <div className="p-8 rounded-3xl bg-white/5 space-y-4">
-                    <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">{t('booking.step1')}</span>
-                      <span className="font-bold">{selectedCourse && (selectedCourse.title[currentLng.startsWith('en') ? 'en_US' : 'zh_TW'] || selectedCourse.title['zh_TW'])}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">{t('booking.step2')}</span>
-                      <span className="font-bold">2026/08/01</span>
-                    </div>
-                    <div className="flex justify-between border-b border-white/5 pb-4">
-                      <span className="text-white/40">{t('booking.step3')}</span>
-                      <span className="font-bold">{selectedCoach?.name}</span>
-                    </div>
-                    <div className="flex justify-between pt-4">
-                      <span className="text-xl font-bold">{t('booking.total')}</span>
-                      <span className="text-3xl font-black text-accent-blue">{selectedCourse && getPrice(selectedCourse.price).val}</span>
+              {currentStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-10"
+                >
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-3xl font-black text-white italic uppercase tracking-tight">
+                      SCHEDULING{' '}
+                      <span className="text-[#00F0FF]/40 ml-2 font-light lowercase">
+                        Scheduling
+                      </span>
+                    </h2>
+                  </div>
+
+                  <div className="grid md:grid-cols-5 gap-8">
+                    <GlassCard className="md:col-span-2 p-8 border-none bg-white/2">
+                      <div className="flex justify-between items-center mb-8">
+                        <span className="text-sm font-black text-white italic uppercase tracking-widest">
+                          {selectedDate
+                            ? new Date(selectedDate).toLocaleDateString([], {
+                                month: 'long',
+                                year: 'numeric',
+                              })
+                            : 'Month Selection'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1 mb-4">
+                        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                          <div
+                            key={d}
+                            className="text-center text-[10px] font-black text-white/20 uppercase"
+                          >
+                            {d}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-2">
+                        {uniqueDates.map((dateStr) => {
+                          const d = new Date(dateStr);
+                          const isSelected = selectedDate === dateStr;
+                          return (
+                            <button
+                              key={dateStr}
+                              onClick={() => setSelectedDate(dateStr)}
+                              className={`aspect-square rounded-xl flex flex-col items-center justify-center transition-all duration-300 border ${
+                                isSelected
+                                  ? 'bg-[#00F0FF] border-[#00F0FF] text-black shadow-[0_0_20px_rgba(0,240,255,0.4)]'
+                                  : 'bg-white/5 border-white/5 hover:border-[#00F0FF]/30 text-white/60'
+                              }`}
+                            >
+                              <span className="text-xs font-black italic">
+                                {d.getDate()}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </GlassCard>
+
+                    <div className="md:col-span-3 space-y-6">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {sessionsForSelectedDate.length > 0 ? (
+                          sessionsForSelectedDate.map((s) => (
+                            <button
+                              key={s.id}
+                              onClick={() => setSelectedSession(s)}
+                              className={`p-6 rounded-2xl border transition-all duration-300 text-center group ${
+                                selectedSession?.id === s.id
+                                  ? 'bg-[#00F0FF]/10 border-[#00F0FF] shadow-[0_0_25px_rgba(0,240,255,0.1)]'
+                                  : 'bg-white/5 border-white/10 hover:border-[#00F0FF]/30'
+                              }`}
+                            >
+                              <p
+                                className={`text-2xl font-black italic tracking-tighter transition-colors ${
+                                  selectedSession?.id === s.id
+                                    ? 'text-[#00F0FF]'
+                                    : 'text-white/40 group-hover:text-white'
+                                }`}
+                              >
+                                {new Date(s.startTime).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  hour12: false,
+                                })}
+                              </p>
+                              <div className="mt-2 h-px w-8 mx-auto bg-white/10 group-hover:bg-[#00F0FF]/30 transition-colors"></div>
+                              <p className="text-[9px] font-bold text-white/20 uppercase tracking-widest mt-2">
+                                {s.capacity - s.bookedCount} Left
+                              </p>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="col-span-full py-20 text-center border border-dashed border-white/10 rounded-3xl">
+                            <p className="text-white/20 font-black uppercase tracking-[0.4em] italic text-xs">
+                              Offline - No Uplinks
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+
+                  <div className="flex justify-between items-center pt-8 border-t border-white/5">
+                    <button
+                      onClick={() => setCurrentStep(1)}
+                      className="text-[10px] font-black text-white/40 hover:text-white uppercase tracking-[0.4em] transition-colors flex items-center gap-2 group"
+                    >
+                      <span className="group-hover:-translate-x-1 transition-transform">
+                        ??
+                      </span>{' '}
+                      Return
+                    </button>
+                    <button
+                      onClick={() => selectedSession && setCurrentStep(3)}
+                      disabled={!selectedSession}
+                      className="bg-[#00F0FF] text-black px-12 py-5 rounded-xl font-black text-xs uppercase tracking-[0.4em] italic shadow-[0_0_30px_rgba(0,240,255,0.3)] hover:shadow-[0_0_50px_rgba(0,240,255,0.5)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    >
+                      Sync Interface
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {currentStep === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-8"
+                >
+                  <h2 className="text-3xl font-black text-white italic uppercase">
+                    CONFIRMATION{' '}
+                    <span className="text-white/20 ml-2 font-light lowercase">
+                      Final Sync
+                    </span>
+                  </h2>
+                  <GlassCard className="p-10 relative overflow-hidden border-l-4 border-l-[#00F0FF]">
+                    <div className="flex gap-8 items-center mb-10">
+                      <div className="w-20 h-20 rounded-full border-2 border-[#00F0FF]/30 p-1">
+                        <div className="w-full h-full rounded-full bg-[#00F0FF]/10 flex items-center justify-center text-[#00F0FF] text-3xl font-black italic">
+                          {selectedSession?.coach.user.name.charAt(0)}
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">
+                          {selectedSession?.coach.user.name}
+                        </h3>
+                        <p className="text-[#00F0FF] text-[10px] font-black uppercase tracking-[0.3em] mt-1">
+                          Lead Instructor Expert Level
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/5 mb-10">
+                      <div>
+                        <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] mb-3">
+                          Target Peak
+                        </p>
+                        <p className="text-white font-black italic">NISEKO ANNUPURI</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] mb-3">
+                          Language Comms
+                        </p>
+                        <p className="text-white font-black italic text-xs uppercase">
+                          EN / ZH / JA
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handleBooking}
+                      disabled={isLoading}
+                      className="w-full bg-[#00F0FF] text-black py-6 rounded-xl font-black text-lg hover:shadow-[0_0_40px_rgba(0,240,255,0.4)] transition-all active:scale-[0.98] disabled:opacity-50 uppercase tracking-[0.2em]"
+                    >
+                      {isLoading ? 'Encrypting...' : 'Initialize Payment'}
+                    </button>
+                    <button
+                      onClick={() => setCurrentStep(2)}
+                      className="w-full text-center text-white/20 text-[10px] font-black uppercase tracking-widest mt-6 hover:text-white transition-colors"
+                    >
+                      ??Back to Scheduling
+                    </button>
+                  </GlassCard>
+                </motion.div>
+              )}
+
+              {currentStep === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <GlassCard className="p-10 border-[#00F0FF]/30">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+                      <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">
+                        PAYMENT GATEWAY{' '}
+                        <span className="text-white/20 ml-2 font-light lowercase">
+                          Encrypted Payload
+                        </span>
+                      </h2>
+                      <div className="px-6 py-3 bg-[#FF003C]/10 border border-[#FF003C]/30 rounded-full">
+                        <CountdownTimer
+                          initialMinutes={10}
+                          onExpire={() => {
+                            notify('Session Expired', 'error');
+                            setCurrentStep(1);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <TappayPayment
+                      amount={currentOrder?.totalAmount || 0}
+                      onSuccess={handlePaymentSuccess}
+                    />
+                  </GlassCard>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="lg:col-start-3">
+            <div className="sticky top-32 space-y-6">
+              <GlassCard className="relative overflow-hidden group">
+                <h3 className="text-sm font-black text-white mb-10 tracking-[0.4em] uppercase flex items-center gap-3">
+                  BOOKING SUMMARY
+                </h3>
 
                 <div className="space-y-8">
-                  <div className="space-y-4">
-                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">{t('booking.payment_method')}</label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-6 rounded-2xl border border-accent-blue bg-accent-blue/10 flex flex-col items-center gap-2 cursor-pointer shadow-lg">
-                        <div className="text-2xl">💳</div>
-                        <p className="text-[10px] font-bold">信用卡 / APPLE PAY</p>
-                      </div>
-                      <div className="p-6 rounded-2xl border border-white/5 bg-white/5 flex flex-col items-center gap-2 grayscale opacity-50">
-                        <div className="text-2xl">📱</div>
-                        <p className="text-[10px] font-bold">LINE PAY</p>
-                      </div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">
+                      Selected Unit
+                    </span>
+                    <span className="text-right font-black text-white text-xs italic uppercase max-w-[150px]">
+                      {selectedCourse
+                        ? (selectedCourse.title as Record<string, string>)[currentLang] ||
+                          (selectedCourse.title as Record<string, string>)['zh-tw']
+                        : '---'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">
+                      Instructor
+                    </span>
+                    <span className="font-black text-white text-xs italic uppercase">
+                      {selectedSession?.coach.user.name || '---'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/20 text-[10px] font-black uppercase tracking-widest">
+                      Time Slot
+                    </span>
+                    <span className="font-black text-white text-xs italic uppercase">
+                      {selectedSession
+                        ? new Date(selectedSession.startTime).toLocaleDateString([], {
+                            month: 'short',
+                            day: 'numeric',
+                          })
+                        : '---'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-12 pt-8 border-t border-white/5">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <span className="text-white/20 text-[10px] font-black uppercase tracking-widest block mb-1">
+                        Final Credits
+                      </span>
+                      <span className="text-3xl font-black text-[#00F0FF] italic tracking-tighter">
+                        {selectedCourse ? selectedCourse.basePrice.toLocaleString() : '0'}
+                      </span>
                     </div>
                   </div>
-                  <button className="w-full py-6 bg-accent-blue text-black font-black tracking-[0.2em] rounded-3xl hover:glow-blue hover:scale-[1.02] transition-all shadow-2xl active:scale-95">
-                    {t('booking.pay_now')}
-                  </button>
                 </div>
-              </div>
+              </GlassCard>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-// Standard Prisma Schema (v5)
+// Prisma Schema (v5) - Snowboarding Reservation System V2.0
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,30 +14,52 @@ enum Role {
   ADMIN
 }
 
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+  LINE
+}
+
 enum CourseType {
   PRIVATE
   GROUP
+  PACKAGE
+  CAMP
 }
 
 enum OrderStatus {
-  PENDING
+  CREATED
+  PENDING_PAYMENT
   PAID
-  CANCELLED
+  COMPLETED
+  REFUND_REQUESTED
   REFUNDED
+  CANCELLED
+}
+
+enum InvoiceType {
+  TWO_ROLL
+  THREE_ROLL
+  CARRIER
+  DONATE
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  passwordHash  String    @map("password_hash")
-  role          Role      @default(STUDENT)
-  preferences   Json?     
-  mobilePhone   String?   @map("mobile_phone")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id               String       @id @default(uuid())
+  email            String       @unique
+  firebaseUid      String?      @unique @map("firebase_uid")
+  name             String?
+  passwordHash     String?      @map("password_hash") // Deprecated: kept for migration
+  role             Role         @default(STUDENT)
+  provider         AuthProvider @default(LOCAL)
+  language         String       @default("zh-TW")
+  mobilePhone      String?      @map("mobile_phone")
+  skillLevel       String?      @map("skill_level")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
   
-  coachProfile  Coach?
-  orders        Order[]
+  coachProfile     Coach?
+  orders           Order[]
 
   @@map("users")
 }
@@ -46,19 +68,34 @@ model Coach {
   id              String    @id @default(uuid())
   userId          String    @unique @map("user_id")
   user            User      @relation(fields: [userId], references: [id])
-  bio             Json?     
+  certifications  Json      @default("[]") // List of SAJ, CASI, etc.
+  baseLocation    String?   @map("base_location") // Primary resort
+  bio             Json?     // Multilingual bio
   rating          Decimal   @default(5.0) @db.Decimal(3, 2)
-  certifications  Json?     
   
   sessions        CourseSession[]
+  schedules       CoachSchedule[]
 
   @@map("coaches")
 }
 
+model CoachSchedule {
+  id        String   @id @default(uuid())
+  coachId   String   @map("coach_id")
+  coach     Coach    @relation(fields: [coachId], references: [id])
+  dayOfWeek Int      @map("day_of_week") // 0=Sun, 1=Mon, ..., 6=Sat
+  startTime String   @map("start_time") // Format "HH:mm"
+  endTime   String   @map("end_time") // Format "HH:mm"
+  location  String   @default("Niseko") // e.g. "Niseko" or "Hakuba"
+  
+  @@index([coachId, dayOfWeek])
+  @@map("coach_schedules")
+}
+
 model Course {
   id               String      @id @default(uuid())
-  title            Json        
-  description      Json        
+  title            Json        // Multilingual title
+  description      Json        // Multilingual description
   type             CourseType  @default(PRIVATE)
   basePrice        Decimal     @map("base_price") @db.Decimal(10, 2)
   currency         String      @default("TWD")
@@ -78,31 +115,50 @@ model CourseSession {
   endTime      DateTime  @map("end_time")
   capacity     Int       @default(1)
   bookedCount  Int       @default(0) @map("booked_count")
+  locationId   String    @map("location_id") // Resort ID
   status       String    @default("OPEN") 
-  version      Int       @default(0)      
+  version      Int       @default(0)      // Optimistic Locking
 
   bookingItems BookingItem[]
 
+  @@index([coachId, startTime, endTime])
   @@index([startTime, endTime])
   @@map("course_sessions")
 }
 
 model Order {
-  id                String      @id @default(uuid())
+  id                String      @id @default(uuid()) // Or custom YYYYMMDD+Random in logic
   userId            String      @map("user_id")
   user              User        @relation(fields: [userId], references: [id])
   totalAmount       Decimal     @map("total_amount") @db.Decimal(10, 2)
-  status            OrderStatus @default(PENDING)
+  status            OrderStatus @default(CREATED)
   paymentMethod     String?     @map("payment_method")
   tappayRecTradeId  String?     @map("tappay_rec_trade_id")
-  invoiceStatus     String?     @map("invoice_status")
+  invoiceType       InvoiceType @default(TWO_ROLL) @map("invoice_type")
   invoiceNumber     String?     @map("invoice_number")
+  invoiceStatus     String?     @map("invoice_status")
+  vatNumber         String?     @map("vat_number")
+  carrierId         String?     @map("carrier_id")
+  donationCode      String?     @map("donation_code")
   createdAt         DateTime    @default(now()) @map("created_at")
   updatedAt         DateTime    @updatedAt @map("updated_at")
 
   items             BookingItem[]
 
+  @@index([status, createdAt])
   @@map("orders")
+}
+
+model Translation {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  zh_TW     String   @map("zh_tw")
+  en        String
+  ja        String
+  zh_HK     String   @map("zh_hk")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("translations")
 }
 
 model BookingItem {
