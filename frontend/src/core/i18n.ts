@@ -17,13 +17,14 @@ i18n
       loadPath: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/locales/{{lng}}/{{ns}}.json`,
     },
     supportedLngs: ['zh-TW', 'en', 'ja', 'zh-HK'],
-    lowerCaseLng: false, // Keep case sensitive to match standard codes like zh-TW
+    fallbackLng: 'zh-TW',
+    load: 'languageOnly', // Try to load 'en' if 'en-US' is detected
     nonExplicitSupportedLngs: true,
-    load: 'currentOnly',
+    cleanCode: true,
     ns: ['translation'],
     defaultNS: 'translation',
     react: {
-      useSuspense: false, // Disable suspense as no boundary is provided
+      useSuspense: false,
     },
   });
 
