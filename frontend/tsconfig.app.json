@@ -21,10 +21,15 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"],
+      "@core": ["./src/core/index"],
       "@core/*": ["./src/core/*"],
+      "@features": ["./src/features/index"],
       "@features/*": ["./src/features/*"],
+      "@services": ["./src/services/index"],
       "@services/*": ["./src/services/*"],
-      "@shared/*": ["../packages/shared/src/*"]
+      "@shared": ["../packages/shared/src/index.ts"],
+      "@shared/*": ["../packages/shared/src/*"],
+      "@snowboarding/shared": ["../packages/shared/src/index.ts"]
     }
   },
   "include": ["src"]

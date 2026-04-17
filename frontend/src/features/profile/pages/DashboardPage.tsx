@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import type { User } from '@snowboarding/shared';
+import type { User, Booking } from '@shared';
 import { bookingService } from '@services/modules/booking.service';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -16,27 +16,6 @@ interface DashboardProps {
   user: User;
   onLogout: () => void;
   onNavigate: () => void;
-}
-
-interface Booking {
-  id: string;
-  status: string;
-  totalAmount: number;
-  items: Array<{
-    id: string;
-    session: {
-      startTime: string;
-      course: {
-        title: Record<string, string>;
-      };
-      coach: {
-        user: {
-          name: string;
-          email: string;
-        };
-      };
-    };
-  }>;
 }
 
 const DashboardPage: React.FC<DashboardProps> = ({ user, onLogout, onNavigate }) => {

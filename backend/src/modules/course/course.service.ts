@@ -1,15 +1,15 @@
-﻿import { Injectable, HttpStatus } from '@nestjs/common';
-import { PrismaService } from '../../core/database/prisma/prisma.service';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { CourseType, Prisma } from '@prisma/client';
 import { BusinessException } from '../../common/filters/business-exception.filter';
 import {
   CourseWithTranslations,
   SessionWithDetails,
 } from './interfaces/course.interface';
+import { CourseRepository } from './repositories/course.repository';
 
 @Injectable()
 export class CourseService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private repository: CourseRepository) {}
 
   async findAll(page = 1, limit = 10, q?: string, sortBy?: string) {
     const skip = (page - 1) * limit;
@@ -17,7 +17,7 @@ export class CourseService {
     const where: Prisma.CourseWhereInput = {};
     if (q) {
       where.OR = [
-        { title: { path: '$.zh-tw', string_contains: q } },
+        { title: { path: '$.zh-TW', string_contains: q } },
         { title: { path: '$.en', string_contains: q } },
       ];
     }
@@ -33,13 +33,8 @@ export class CourseService {
     }
 
     const [items, total] = await Promise.all([
-      this.prisma.course.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy,
-      }),
-      this.prisma.course.count({ where }),
+      this.repository.findMany(where, skip, limit, orderBy),
+      this.repository.count(where),
     ]);
 
     return {
@@ -56,13 +51,11 @@ export class CourseService {
     type: CourseType;
     basePrice: number;
   }) {
-    return this.prisma.course.create({
-      data: {
-        title: data.title as Prisma.InputJsonValue,
-        description: data.description as Prisma.InputJsonValue,
-        type: data.type,
-        basePrice: data.basePrice,
-      },
+    return this.repository.createCourse({
+      title: data.title as Prisma.InputJsonValue,
+      description: data.description as Prisma.InputJsonValue,
+      type: data.type,
+      basePrice: data.basePrice,
     });
   }
 
@@ -83,14 +76,7 @@ export class CourseService {
       };
     }
 
-    const items = await this.prisma.courseSession.findMany({
-      where,
-      include: {
-        course: true,
-        coach: { include: { user: { select: { email: true } } } },
-      },
-      orderBy: { startTime: 'asc' },
-    });
+    const items = await this.repository.findSessions(where);
 
     return items as (SessionWithDetails & { course: CourseWithTranslations })[];
   }
@@ -104,16 +90,14 @@ export class CourseService {
     locationId: string;
   }) {
     // Check for coach availability
-    const conflict = await this.prisma.courseSession.findFirst({
-      where: {
-        coachId: data.coachId,
-        OR: [
-          {
-            startTime: { lt: data.endTime },
-            endTime: { gt: data.startTime },
-          },
-        ],
-      },
+    const conflict = await this.repository.findFirstSession({
+      coachId: data.coachId,
+      OR: [
+        {
+          startTime: { lt: data.endTime },
+          endTime: { gt: data.startTime },
+        },
+      ],
     });
 
     if (conflict) {
@@ -124,15 +108,13 @@ export class CourseService {
       );
     }
 
-    return this.prisma.courseSession.create({
-      data: {
-        courseId: data.courseId,
-        coachId: data.coachId,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        capacity: data.capacity,
-        locationId: data.locationId || 'Niseko',
-      },
+    return this.repository.createSession({
+      courseId: data.courseId,
+      coachId: data.coachId,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      capacity: data.capacity,
+      locationId: data.locationId || 'Niseko',
     });
   }
 
@@ -163,10 +145,7 @@ export class CourseService {
     });
 
     if (sessionsToCreate.length > 0) {
-      await this.prisma.courseSession.createMany({
-        data: sessionsToCreate,
-        skipDuplicates: true,
-      });
+      await this.repository.createManySessions(sessionsToCreate);
     }
 
     return { generatedCount: sessionsToCreate.length };

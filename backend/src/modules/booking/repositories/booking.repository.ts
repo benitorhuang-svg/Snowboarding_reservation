@@ -13,6 +13,42 @@ export class BookingRepository {
     });
   }
 
+  async findUserBookings(userId: string) {
+    return this.prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            session: {
+              include: {
+                course: true,
+                coach: {
+                  include: { user: { select: { email: true, name: true } } },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findOrderWithDetails(orderId: string) {
+    return this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: {
+          include: {
+            session: {
+              include: { course: true, coach: { include: { user: true } } },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async createOrderWithItems(data: {
     id: string;
     userId: string;
@@ -32,6 +68,24 @@ export class BookingRepository {
             price: data.totalAmount,
           },
         },
+      },
+    });
+  }
+
+  async updateSessionBookedCount(
+    sessionId: string,
+    currentVersion: number,
+    maxCapacity: number,
+  ) {
+    return this.prisma.courseSession.updateMany({
+      where: {
+        id: sessionId,
+        version: currentVersion,
+        bookedCount: { lt: maxCapacity },
+      },
+      data: {
+        bookedCount: { increment: 1 },
+        version: { increment: 1 },
       },
     });
   }

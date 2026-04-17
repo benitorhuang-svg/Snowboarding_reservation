@@ -42,21 +42,18 @@ export enum Language {
 }
 
 export enum ErrorCode {
-  // Auth
   AUTH_INVALID_CREDENTIALS = 'AUTH_001',
   AUTH_TOKEN_EXPIRED = 'AUTH_002',
   AUTH_UNAUTHORIZED = 'AUTH_003',
   AUTH_USER_EXISTS = 'AUTH_004',
-  
-  // Booking
   BOOK_SESSION_FULL = 'BOOK_001',
   BOOK_CONFLICT = 'BOOK_002',
   BOOK_NOT_FOUND = 'BOOK_003',
-  
-  // Payment
   PAY_FAILED = 'PAY_001',
   PAY_INVALID_PRIME = 'PAY_002',
 }
+
+// --- Domain Models ---
 
 export interface User {
   id: string;
@@ -66,4 +63,38 @@ export interface User {
   name?: string;
   mobilePhone?: string;
   skillLevel?: string;
+}
+
+export interface Course {
+  id: string;
+  title: Record<string, string> | any;
+  description: Record<string, string> | any;
+  basePrice: number;
+  type?: CourseType;
+}
+
+export interface Session {
+  id: string;
+  startTime: string | Date;
+  endTime: string | Date;
+  capacity: number;
+  bookedCount: number;
+  course: Course;
+  coach: {
+    user: {
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface Booking {
+  id: string;
+  status: OrderStatus | string;
+  totalAmount: number;
+  createdAt?: string | Date;
+  items: Array<{
+    id: string;
+    session: Session;
+  }>;
 }

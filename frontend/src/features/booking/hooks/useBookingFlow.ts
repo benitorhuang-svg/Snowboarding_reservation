@@ -2,29 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { courseService } from '@services/modules/course.service';
 import { bookingService } from '@services/modules/booking.service';
 import { useNotification } from '@/core';
-
-interface Course {
-  id: string;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  basePrice: number;
-}
-
-interface Session {
-  id: string;
-  startTime: string;
-  endTime: string;
-  capacity: number;
-  bookedCount: number;
-  course: Course;
-  coach: { user: { name: string; email: string } };
-}
-
-interface Order {
-  id: string;
-  totalAmount: number;
-  status: string;
-}
+import type { Course, Session, Booking } from '@shared';
 
 export const useBookingFlow = () => {
   const { notify } = useNotification();
@@ -33,7 +11,7 @@ export const useBookingFlow = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+  const [currentOrder, setCurrentOrder] = useState<Booking | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
@@ -93,7 +71,7 @@ export const useBookingFlow = () => {
     setIsLoading(true);
     try {
       const order = await bookingService.createBooking([selectedSession.id]);
-      setCurrentOrder(order as Order);
+      setCurrentOrder(order as unknown as Booking);
       setCurrentStep(4);
     } catch (error: any) {
       notify(error?.message || 'Booking failed', 'error');

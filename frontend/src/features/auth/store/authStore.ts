@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@snowboarding/shared';
+import type { User } from '@shared';
 import {
   auth,
   onAuthStateChanged,

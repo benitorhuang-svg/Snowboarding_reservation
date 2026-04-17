@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { User } from '@snowboarding/shared';
+import type { User } from '@shared';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface NavbarProps {

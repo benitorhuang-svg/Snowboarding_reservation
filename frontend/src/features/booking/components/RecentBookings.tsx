@@ -1,28 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar as CalendarIcon, ChevronRight } from 'lucide-react';
-import { GlassCard } from '@core/components/ui/GlassCard';
-
-interface Booking {
-  id: string;
-  status: string;
-  totalAmount: number;
-  items: Array<{
-    id: string;
-    session: {
-      startTime: string;
-      course: {
-        title: Record<string, string>;
-      };
-      coach: {
-        user: {
-          name: string;
-          email: string;
-        };
-      };
-    };
-  }>;
-}
+import { GlassCard, formatCurrency, formatDate } from '@core';
+import type { Booking } from '@shared';
 
 interface RecentBookingsProps {
   bookings: Booking[];
@@ -80,17 +60,19 @@ const RecentBookings: React.FC<RecentBookingsProps> = ({
                       : 'bg-white/5 text-white/20'
                   }`}
                 >
-                  {order.items[0]?.session?.course?.title['zh-tw']?.charAt(0) || 'S'}
+                  {String(order.items[0]?.session?.course?.title['zh-TW'] || 'S').charAt(
+                    0,
+                  )}
                 </div>
                 <div>
                   <p className="font-black text-lg text-white group-hover:text-[#00F0FF] transition-colors italic uppercase tracking-tight">
                     {order.items[0]?.session?.course?.title[currentLang] ||
-                      order.items[0]?.session?.course?.title['zh-tw']}
+                      order.items[0]?.session?.course?.title['zh-TW']}
                   </p>
                   <div className="flex items-center gap-4 mt-2 text-[10px] font-black text-white/20 uppercase tracking-widest">
                     <span className="flex items-center gap-2 italic">
                       <CalendarIcon size={12} />{' '}
-                      {new Date(order.items[0]?.session?.startTime).toLocaleDateString()}
+                      {formatDate(order.items[0]?.session?.startTime)}
                     </span>
                     <span className="w-1 h-1 rounded-full bg-white/10"></span>
                     <span className="italic">
@@ -104,7 +86,7 @@ const RecentBookings: React.FC<RecentBookingsProps> = ({
               <div className="flex items-center gap-8">
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-black text-white italic tracking-tighter">
-                    NT$ {order.totalAmount}
+                    {formatCurrency(order.totalAmount)}
                   </p>
                   <p className="text-[8px] font-black text-[#00F0FF]/60 uppercase tracking-[0.3em] mt-1">
                     {order.status}

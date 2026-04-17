@@ -1,26 +1,5 @@
 import { useMemo } from 'react';
-import type { User } from '@snowboarding/shared';
-
-interface Booking {
-  id: string;
-  status: string;
-  totalAmount: number;
-  items: Array<{
-    id: string;
-    session: {
-      startTime: string;
-      course: {
-        title: Record<string, string>;
-      };
-      coach: {
-        user: {
-          name: string;
-          email: string;
-        };
-      };
-    };
-  }>;
-}
+import type { User, Booking } from '@shared';
 
 export const useUserStats = (user: User, bookings: Booking[]) => {
   const getSkillProgress = (level: string) => {

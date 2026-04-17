@@ -1,45 +1,41 @@
-﻿import {
+import {
   Injectable,
   ConflictException,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from '../../core/database/prisma/prisma.service';
 import { OrderStatus } from '@prisma/client';
 import { RedisService } from '../../core/redis/redis.service';
+import { BookingRepository } from './repositories/booking.repository';
+import { PrismaService } from '../../core/database/prisma/prisma.service';
 
 @Injectable()
 export class BookingService {
   constructor(
-    private prisma: PrismaService,
+    private repository: BookingRepository,
     private redisClient: RedisService,
+    private prisma: PrismaService, // Keep for transactions if repository doesn't wrap them yet
   ) {}
 
   async createBooking(userId: string, sessionId: string) {
-    // 1. Distributed Lock to prevent massive hits on same session
     const lockKey = 'lock:session:' + sessionId;
     const lockValue = Date.now().toString();
 
-    // Acquire lock for 5 seconds
     const acquired = await this.redisClient.set(lockKey, lockValue, 'EX', 5, 'NX');
     if (!acquired) {
       throw new ConflictException('預約繁忙中，請稍後再試');
     }
 
     try {
+      // Use repository for single lookups
+      const session = await this.repository.findSessionWithCourse(sessionId);
+      if (!session) throw new NotFoundException('找不到該課程時段');
+      if (session.bookedCount >= session.capacity) {
+        throw new BadRequestException('名額已滿');
+      }
+
       return await this.prisma.$transaction(async (tx) => {
-        // 2. Verify Session and Course Price
-        const session = await tx.courseSession.findUnique({
-          where: { id: sessionId },
-          include: { course: true },
-        });
-
-        if (!session) throw new NotFoundException('找不到該課程時段');
-        if (session.bookedCount >= session.capacity) {
-          throw new BadRequestException('名額已滿');
-        }
-
-        // 3. Optimistic Locking using version field
+        // Optimistic locking via repository logic (can be further moved to repo with tx pass-in)
         const updateResult = await tx.courseSession.updateMany({
           where: {
             id: sessionId,
@@ -56,7 +52,6 @@ export class BookingService {
           throw new ConflictException('預約衝突，請重試');
         }
 
-        // 4. Create Order with YYYYMMDD style ID
         const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
         const orderId = dateStr + randomStr;
@@ -76,18 +71,11 @@ export class BookingService {
           },
         });
 
-        // 5. Implement TTL in Redis for this order to auto-release stock if not paid in 10 mins
-        await this.redisClient.set(
-          'order:pending:' + orderId,
-          sessionId,
-          'EX',
-          600, // 10 minutes in seconds
-        );
+        await this.redisClient.set('order:pending:' + orderId, sessionId, 'EX', 600);
 
         return order;
       });
     } finally {
-      // Release lock safely
       const currentLockValue = await this.redisClient.get(lockKey);
       if (currentLockValue === lockValue) {
         await this.redisClient.del(lockKey);
@@ -96,38 +84,10 @@ export class BookingService {
   }
 
   async getOrder(orderId: string) {
-    return this.prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        items: {
-          include: {
-            session: {
-              include: { course: true, coach: { include: { user: true } } },
-            },
-          },
-        },
-      },
-    });
+    return this.repository.findOrderWithDetails(orderId);
   }
 
   async findUserBookings(userId: string) {
-    return this.prisma.order.findMany({
-      where: { userId },
-      include: {
-        items: {
-          include: {
-            session: {
-              include: {
-                course: true,
-                coach: {
-                  include: { user: { select: { email: true } } },
-                },
-              },
-            },
-          },
-        },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.repository.findUserBookings(userId);
   }
 }

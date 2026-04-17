@@ -1,6 +1,6 @@
-export { default as CalendarPage } from './pages/CalendarPage';
-export { default as CoachCard } from './components/CoachCard';
-export { default as CountdownTimer } from './components/CountdownTimer';
-export { default as RecentBookings } from './components/RecentBookings';
-export { default as TappayPayment } from './components/TappayPayment';
-export * from './hooks/useBookingFlow';
+export { default as CalendarPage } from '@features/booking/pages/CalendarPage';
+export { default as CoachCard } from '@features/booking/components/CoachCard';
+export { default as CountdownTimer } from '@features/booking/components/CountdownTimer';
+export { default as RecentBookings } from '@features/booking/components/RecentBookings';
+export { default as TappayPayment } from '@features/booking/components/TappayPayment';
+export * from '@features/booking/hooks/useBookingFlow';

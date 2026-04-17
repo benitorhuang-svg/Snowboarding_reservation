@@ -1,1 +1,1 @@
-export * from './pages/AdminTranslations';
+export * from '@features/admin/pages/AdminTranslations';

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { User } from '@snowboarding/shared';
+import type { User } from '@shared';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import AuthForm from '@features/auth/components/AuthForm';

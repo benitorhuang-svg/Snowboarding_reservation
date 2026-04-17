@@ -1,1 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "=== Running Pre-push Safety Checks ==="
 pnpm run build
+if [ $? -ne 0 ]; then
+  echo "Error: Build failed. Push aborted."
+  exit 1
+fi
+echo "=== Build Successful. Proceeding with Push ==="

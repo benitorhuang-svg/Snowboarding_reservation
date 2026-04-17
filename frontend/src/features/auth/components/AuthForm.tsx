@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GlassCard } from '@core/components/ui/GlassCard';
-import type { User } from '@snowboarding/shared';
+import type { User } from '@shared';
 import { useAuthActions } from '@features/auth/hooks/useAuthActions';
 
 interface AuthFormProps {

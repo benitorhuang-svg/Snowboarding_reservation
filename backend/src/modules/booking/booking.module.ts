@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { BookingController } from './booking.controller';
 import { BookingService } from './booking.service';
 import { BookingCleanupService } from './tasks/booking-cleanup.task';
-import { PrismaModule } from '../../core/database/prisma/prisma.module';
-import { RedisModule } from '../../core/redis/redis.module';
+import { BookingRepository } from './repositories/booking.repository';
 
 @Module({
-  imports: [PrismaModule, RedisModule],
+  imports: [],
   controllers: [BookingController],
-  providers: [BookingService, BookingCleanupService],
-  exports: [BookingService],
+  providers: [BookingService, BookingCleanupService, BookingRepository],
+  exports: [BookingService, BookingRepository],
 })
 export class BookingModule {}

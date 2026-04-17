@@ -6,7 +6,7 @@ import LocationMap from '@features/home/components/LocationMap';
 import Story from '@features/home/components/Story';
 import { Navbar, Footer } from '@core/layouts';
 import CoachCard from '@features/booking/components/CoachCard';
-import type { User } from '@snowboarding/shared';
+import type { User } from '@shared';
 
 interface HomeProps {
   onNavigate: () => void;

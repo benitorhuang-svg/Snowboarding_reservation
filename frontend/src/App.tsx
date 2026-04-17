@@ -15,8 +15,8 @@ import AdminTranslations from '@features/admin/pages/AdminTranslations';
 import EditProfile from '@features/profile/pages/EditProfile';
 import PaymentMethods from '@features/profile/pages/PaymentMethods';
 import { useAuthStore } from '@features/auth/store/authStore';
-import type { User } from '@snowboarding/shared';
-import { NotificationProvider } from './core';
+import type { User } from '@shared';
+import { NotificationProvider } from '@core';
 
 function AppRoutes() {
   const navigate = useNavigate();
