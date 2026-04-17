@@ -7,16 +7,16 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import Home from './pages/Home';
-import Calendar from './pages/Calendar';
-import Auth from './pages/Auth';
-import Dashboard from './pages/Dashboard';
-import AdminTranslations from './pages/AdminTranslations';
-import EditProfile from './pages/EditProfile';
-import PaymentMethods from './pages/PaymentMethods';
-import { useAuthStore } from './store/authStore';
+import HomePage from '@features/home/pages/HomePage';
+import AuthPage from '@features/auth/pages/AuthPage';
+import DashboardPage from '@features/profile/pages/DashboardPage';
+import CalendarPage from '@features/booking/pages/CalendarPage';
+import AdminTranslations from '@features/admin/pages/AdminTranslations';
+import EditProfile from '@features/profile/pages/EditProfile';
+import PaymentMethods from '@features/profile/pages/PaymentMethods';
+import { useAuthStore } from '@features/auth/store/authStore';
 import type { User } from '@snowboarding/shared';
-import { NotificationProvider } from './providers/NotificationProvider';
+import { NotificationProvider } from './core';
 
 function AppRoutes() {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ function AppRoutes() {
         <Route
           path="/"
           element={
-            <Home
+            <HomePage
               onNavigate={navigateToBooking}
               onAuth={() => navigate(user ? '/dashboard' : '/auth')}
               user={user}
@@ -68,18 +68,23 @@ function AppRoutes() {
           }
         />
 
-        <Route path="/calendar" element={<Calendar onNavigate={() => navigate('/')} />} />
+        <Route
+          path="/calendar"
+          element={<CalendarPage onNavigate={() => navigate('/')} />}
+        />
 
         <Route
           path="/auth"
-          element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />}
+          element={
+            <AuthPage onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />
+          }
         />
 
         <Route
           path="/dashboard"
           element={
             user ? (
-              <Dashboard
+              <DashboardPage
                 user={user}
                 onLogout={handleLogout}
                 onNavigate={() => navigate('/calendar')}
@@ -113,7 +118,7 @@ function AppRoutes() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed right-6 md:right-10 bottom-8 md:bottom-12 w-12 h-12 md:w-14 md:h-14 glass rounded-full flex items-center justify-center group hover:glow-blue active:scale-95 transition-all z-500 shadow-2xl border-border-light"
-          title="??"
+          title="回到頂端"
         >
           <div className="relative flex flex-col items-center">
             <svg

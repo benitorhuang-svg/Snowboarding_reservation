@@ -2,20 +2,10 @@
 import { PrismaService } from '../../core/database/prisma/prisma.service';
 import { CourseType, Prisma } from '@prisma/client';
 import { BusinessException } from '../../common/filters/business-exception.filter';
-
-export interface CourseWithTranslations {
-  id: string;
-  title: Prisma.JsonValue;
-  description: Prisma.JsonValue;
-  basePrice: Prisma.Decimal;
-}
-
-export interface SessionWithDetails {
-  id: string;
-  startTime: Date;
-  capacity: number;
-  bookedCount: number;
-}
+import {
+  CourseWithTranslations,
+  SessionWithDetails,
+} from './interfaces/course.interface';
 
 @Injectable()
 export class CourseService {

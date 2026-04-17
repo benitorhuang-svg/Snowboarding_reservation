@@ -5,30 +5,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { OrderStatusValidator } from '../../common/validators/order-status.validator';
 import * as crypto from 'crypto';
 import { BusinessException } from '../../common/filters/business-exception.filter';
-
-interface TapPayResponse {
-  status: number;
-  msg: string;
-  rec_trade_id: string;
-}
-
-interface LinePayResponse {
-  returnCode: string;
-  returnMessage: string;
-  info: {
-    paymentUrl: {
-      web: string;
-      app: string;
-    };
-    transactionId: string;
-  };
-}
-
-interface WebhookData {
-  order_id: string;
-  rec_trade_id: string;
-  status: number;
-}
+import {
+  TapPayResponse,
+  LinePayResponse,
+  WebhookData,
+} from './interfaces/payment.interface';
 
 @Injectable()
 export class PaymentService {

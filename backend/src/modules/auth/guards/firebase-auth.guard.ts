@@ -5,7 +5,7 @@
   UnauthorizedException,
   Logger,
 } from '@nestjs/common';
-import { firebaseAuth } from '../firebase.config';
+import { firebaseAuth } from '../config/firebase.config';
 import { PrismaService } from '../../../core/database/prisma/prisma.service';
 import { Role } from '@prisma/client';
 import { Request } from 'express';

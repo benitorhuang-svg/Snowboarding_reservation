@@ -34,11 +34,35 @@ export enum InvoiceType {
   DONATE = 'DONATE',
 }
 
+export enum Language {
+  ZH_TW = 'zh-TW',
+  EN = 'en',
+  JA = 'ja',
+  ZH_HK = 'zh-HK',
+}
+
+export enum ErrorCode {
+  // Auth
+  AUTH_INVALID_CREDENTIALS = 'AUTH_001',
+  AUTH_TOKEN_EXPIRED = 'AUTH_002',
+  AUTH_UNAUTHORIZED = 'AUTH_003',
+  AUTH_USER_EXISTS = 'AUTH_004',
+  
+  // Booking
+  BOOK_SESSION_FULL = 'BOOK_001',
+  BOOK_CONFLICT = 'BOOK_002',
+  BOOK_NOT_FOUND = 'BOOK_003',
+  
+  // Payment
+  PAY_FAILED = 'PAY_001',
+  PAY_INVALID_PRIME = 'PAY_002',
+}
+
 export interface User {
   id: string;
   email: string;
   role: Role | 'STUDENT' | 'COACH' | 'ADMIN';
-  language: string;
+  language: Language | string;
   name?: string;
   mobilePhone?: string;
   skillLevel?: string;

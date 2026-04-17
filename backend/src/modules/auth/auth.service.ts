@@ -1,14 +1,10 @@
 ﻿import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../../core/database/prisma/prisma.service';
 import { Role } from '@prisma/client';
-import { firebaseAuth } from './firebase.config';
+import { firebaseAuth } from './config/firebase.config';
 import { BusinessException } from '../../common/filters/business-exception.filter';
 import { RedisService } from '../../core/redis/redis.service';
-
-interface RecaptchaResponse {
-  success: boolean;
-  'error-codes'?: string[];
-}
+import { RecaptchaResponse } from './interfaces/auth.interface';
 
 @Injectable()
 export class AuthService {
