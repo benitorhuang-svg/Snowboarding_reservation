@@ -1,17 +1,22 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+@source "./**/*.html";
 
 @layer base {
   :root {
-    --color-primary: #2563eb;
-    --color-primary-hover: #1d4ed8;
-    --color-secondary: #f97316;
-    --color-secondary-hover: #ea580c;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent: #f97316;
+    --accent-hover: #ea580c;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-blur: blur(24px);
   }
 
   body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background-color: #f8fafc;
+    @apply font-sans antialiased bg-slate-50 text-slate-900;
   }
+
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -19,19 +24,78 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
+    @apply bg-slate-300 rounded-full;
   }
 }
 
 @layer components {
-  .radio-card-input:checked + .radio-card {
-    border-color: #2563eb;
-    background-color: #eff6ff;
-    box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.15);
+  /* Layout Containers */
+  .page-container {
+    @apply max-w-7xl mx-auto px-6 md:px-12 lg:px-16;
   }
-  .radio-card-input:checked + .radio-card .check-icon {
-    opacity: 1;
-    transform: scale(1);
+
+  /* Navigation */
+  .glass-nav {
+    @apply h-24 sticky top-0 z-1000 flex items-center justify-between px-6 md:px-16 border-b border-black/5;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
   }
+
+  /* Cards */
+  .premium-card {
+    @apply bg-white rounded-[40px] border border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden transition-all duration-500;
+  }
+  .premium-card:hover {
+    @apply -translate-y-3 shadow-3xl shadow-blue-500/10;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3;
+  }
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/20;
+  }
+  .btn-secondary {
+    @apply bg-orange-500 text-white hover:bg-orange-600 shadow-xl shadow-orange-500/20;
+  }
+  .btn-outline {
+    @apply border-2 border-slate-200 text-slate-500 hover:border-blue-600 hover:text-blue-600;
+  }
+
+  /* Badges */
+  .persona-badge {
+    @apply fixed bottom-10 right-10 z-2000 flex items-center gap-3 px-6 py-3 rounded-2xl bg-slate-900/90 text-[11px] font-black uppercase tracking-widest text-yellow-400 backdrop-blur-md shadow-2xl;
+  }
+
+  .persona-label {
+    @apply text-[10px] font-black px-3 py-1 rounded-lg absolute top-8 right-8 uppercase tracking-widest;
+  }
+  .label-ken { @apply bg-blue-600 text-white; }
+  .label-yuki { @apply bg-green-600 text-white; }
+  .label-tun { @apply bg-orange-600 text-white; }
+
+  /* Demo Hub Cards */
+  .pillar-card {
+    @apply bg-white/5 border border-white/10 rounded-[40px] p-10 transition-all duration-500 relative block no-underline text-inherit;
+  }
+  .pillar-card:hover {
+    @apply -translate-y-3 bg-white/10 border-blue-500/40 shadow-2xl shadow-black/50;
+  }
+
+  /* Utility Animations */
+  .animate-breathe {
+    animation: breathe 2s infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+  }
+}
+
+/* Specific Page Overrides */
+.hero-glow {
+  @apply fixed inset-0 -z-10;
+  background: radial-gradient(circle at 5% 5%, rgba(37, 99, 235, 0.1), transparent 40%),
+              radial-gradient(circle at 95% 95%, rgba(249, 115, 22, 0.08), transparent 40%);
 }

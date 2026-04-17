@@ -6,7 +6,7 @@
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\" \"pnpm run dev:demo\"",
     "dev:backend": "pnpm --filter backend run start:dev",
     "dev:frontend": "pnpm --filter frontend run dev",
-    "dev:demo": "concurrently \"pnpm exec vite apps/demo\" \"pnpm exec tailwindcss -i apps/demo/input.css -o apps/demo/style.css --watch\"",
+    "dev:demo": "pnpm --filter @skifun/demo run dev --port 3333",
     "install:all": "pnpm install -r",
     "build": "pnpm --filter \"*\" build",
     "prisma:generate": "pnpm --filter backend exec prisma generate",

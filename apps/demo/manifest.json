@@ -1,0 +1,22 @@
+{
+  "name": "SkiFun Japan Industrial Demo",
+  "short_name": "SkiFun Demo",
+  "description": "Premium Snowboarding Reservation Experience",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "assets/pwa_icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/pwa_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

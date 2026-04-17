@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>磁星計畫 展示版甘特圖（A4直式）</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        --ink: #162033;
+        --muted: #5c6a82;
+        --line: #d9e2f1;
+        --line-soft: #eaf0f8;
+        --paper: #ffffff;
+        --bg: #eef3fb;
+        --navy: #13233f;
+        --cyan: #4fd1ff;
+        --blue: #3c74ff;
+        --violet: #7b6cff;
+        --pink: #ff6aa5;
+        --gold: #ffbe54;
+        --green: #4ebc89;
+        --shadow: 0 18px 40px rgba(20, 35, 63, 0.12);
+    }
+
+    html,
+    body {
+        font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+        color: var(--ink);
+        background:
+            radial-gradient(circle at top left, rgba(79, 209, 255, 0.2), transparent 28%),
+            radial-gradient(circle at top right, rgba(123, 108, 255, 0.18), transparent 30%),
+            linear-gradient(180deg, #f4f7fc 0%, #eaf0f7 100%);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 9mm 8mm 8mm 8mm;
+    }
+
+    @media print {
+        html,
+        body {
+            background: #ffffff;
+        }
+
+        .page {
+            box-shadow: none;
+            margin: 0 auto;
+        }
+    }
+
+    .page {
+        width: 194mm;
+        min-height: 279mm;
+        margin: 12px auto;
+        background: var(--paper);
+        border: 1px solid rgba(19, 35, 63, 0.06);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .hero {
+        padding: 10mm 9mm 6mm 9mm;
+        background:
+            radial-gradient(circle at 12% 20%, rgba(79, 209, 255, 0.28), transparent 18%),
+            radial-gradient(circle at 85% 16%, rgba(255, 106, 165, 0.24), transparent 18%),
+            linear-gradient(135deg, #10203d 0%, #18305b 48%, #223f70 100%);
+        color: #ffffff;
+        position: relative;
+    }
+
+    .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 18px;
+        background: linear-gradient(90deg, rgba(79, 209, 255, 0.72), rgba(123, 108, 255, 0.5), rgba(255, 106, 165, 0.56));
+        opacity: 0.85;
+    }
+
+    .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10mm;
+    }
+
+    .hero-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 8pt;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.82);
+        margin-bottom: 4mm;
+    }
+
+    .hero-kicker::before {
+        content: "";
+        width: 18px;
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--cyan), #ffffff);
+    }
+
+    .hero h1 {
+        font-size: 18.5pt;
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+        margin-bottom: 2mm;
+    }
+
+    .hero p {
+        font-size: 8.4pt;
+        line-height: 1.6;
+        max-width: 118mm;
+        color: rgba(255, 255, 255, 0.84);
+    }
+
+    .hero-badge {
+        min-width: 34mm;
+        padding: 4mm 4.5mm;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 5mm;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(6px);
+        text-align: center;
+    }
+
+    .hero-badge .label {
+        font-size: 7pt;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 1mm;
+    }
+
+    .hero-badge .value {
+        font-size: 15pt;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .hero-badge .sub {
+        margin-top: 1mm;
+        font-size: 7pt;
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .content {
+        padding: 6mm 8mm 7mm 8mm;
+    }
+
+    .summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3mm;
+        margin-bottom: 4mm;
+    }
+
+    .summary-card {
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        padding: 3.5mm 4mm;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 248, 255, 0.96));
+    }
+
+    .summary-card .label {
+        font-size: 7pt;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 1.2mm;
+    }
+
+    .summary-card .value {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 1mm;
+    }
+
+    .summary-card .desc {
+        font-size: 7.2pt;
+        color: #66748c;
+        line-height: 1.5;
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 4mm;
+        margin-bottom: 2.5mm;
+    }
+
+    .section-title {
+        font-size: 9pt;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: var(--navy);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-title::before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--cyan), var(--violet));
+        box-shadow: 0 0 0 4px rgba(79, 209, 255, 0.12);
+    }
+
+    .section-note {
+        font-size: 7pt;
+        color: #71819b;
+    }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.4mm 4mm;
+        margin-bottom: 3mm;
+    }
+
+    .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 2mm;
+        padding: 1.4mm 2.6mm;
+        border-radius: 999px;
+        background: #f6f9fe;
+        border: 1px solid #e5edf8;
+        font-size: 7pt;
+        color: #4a5870;
+    }
+
+    .legend i {
+        width: 4.5mm;
+        height: 2.6mm;
+        border-radius: 999px;
+        display: inline-block;
+    }
+
+    .chart-wrap {
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        overflow: hidden;
+        background:
+            linear-gradient(180deg, rgba(248, 251, 255, 0.7), rgba(255, 255, 255, 1));
+        margin-bottom: 4mm;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 41mm repeat(16, 1fr);
+        width: 100%;
+    }
+
+    .hdr-corner {
+        background: linear-gradient(135deg, #10203d, #1f3d72);
+        color: #ffffff;
+        font-size: 8.2pt;
+        font-weight: 700;
+        padding: 2.5mm 2.8mm;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hdr-month {
+        text-align: center;
+        padding: 1.8mm 0 1.5mm;
+        font-size: 7.7pt;
+        font-weight: 700;
+        color: var(--navy);
+        background: linear-gradient(180deg, #e9f2ff, #f5f9ff);
+        border-bottom: 1px solid #cfdbef;
+        border-right: 1.5px solid #cfdbef;
+    }
+
+    .hdr-week {
+        text-align: center;
+        padding: 1.1mm 0;
+        font-size: 6.2pt;
+        line-height: 1.35;
+        color: #5a6b88;
+        background: #fbfdff;
+        border-bottom: 1px solid #e2eaf6;
+        border-right: 1px solid #edf3fb;
+    }
+
+    .hdr-week.orbit-start,
+    .cell.orbit-start {
+        border-left: 1.5px solid #cfdbef;
+    }
+
+    .row-label {
+        min-height: 11mm;
+        padding: 1.7mm 2.2mm;
+        background: linear-gradient(180deg, #fbfdff, #f7faff);
+        border-bottom: 1px solid #edf3fb;
+        border-right: 2px solid #d7e3f4;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1px;
+    }
+
+    .row-label .phase {
+        font-size: 7.9pt;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.3;
+    }
+
+    .row-label .stage {
+        font-size: 6.3pt;
+        color: #6f7e96;
+        line-height: 1.35;
+    }
+
+    .cell {
+        min-height: 11mm;
+        border-bottom: 1px solid #edf3fb;
+        border-right: 1px dashed #edf3fb;
+        background: rgba(255, 255, 255, 0.9);
+        position: relative;
+    }
+
+    .cell.alt {
+        background: rgba(247, 250, 255, 0.92);
+    }
+
+    .bar-layer {
+        position: relative;
+        pointer-events: none;
+    }
+
+    .bar {
+        position: absolute;
+        top: 1.9mm;
+        bottom: 1.9mm;
+        left: 1px;
+        right: 1px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        padding: 0 4px 0 8px;
+        font-size: 6.7pt;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        box-shadow: 0 8px 14px rgba(25, 42, 80, 0.18);
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .bar::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.82);
+        flex-shrink: 0;
+    }
+
+    .bar.c0 { background: linear-gradient(90deg, #2ec5ff, #2e7cff); }
+    .bar.c1 { background: linear-gradient(90deg, #6688ff, #7b6cff); }
+    .bar.c2 { background: linear-gradient(90deg, #8a68ff, #c05dff); }
+    .bar.c3 { background: linear-gradient(90deg, #ff7c8f, #ff5e82); }
+    .bar.c4 { background: linear-gradient(90deg, #ff9e5c, #ffbe54); color: #3d2500; }
+    .bar.c5 { background: linear-gradient(90deg, #4ebb8b, #2fc4b6); }
+    .bar.c6 { background: linear-gradient(90deg, #34b3d8, #4f7cff); }
+    .bar.c7 { background: linear-gradient(90deg, #64748b, #293a55); }
+    .bar.c8 { background: linear-gradient(90deg, #ff5f9f, #7d58ff); }
+    .bar.c9 { background: linear-gradient(90deg, #20385f, #101b31); }
+
+    .detail-card {
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 7.35pt;
+    }
+
+    .detail-table thead th {
+        background: linear-gradient(135deg, #10203d, #213f74);
+        color: #ffffff;
+        text-align: left;
+        padding: 2mm 2.2mm;
+        font-size: 7.5pt;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+
+    .detail-table tbody td {
+        padding: 1.75mm 2.2mm;
+        border-bottom: 1px solid #edf3fb;
+        vertical-align: top;
+        line-height: 1.55;
+    }
+
+    .detail-table tbody tr:nth-child(even) td {
+        background: #f9fbff;
+    }
+
+    .td-no {
+        width: 6mm;
+        text-align: center;
+    }
+
+    .td-no span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 6mm;
+        height: 6mm;
+        border-radius: 50%;
+        color: #ffffff;
+        font-size: 7pt;
+        font-weight: 700;
+    }
+
+    .td-phase {
+        width: 30mm;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .td-stage {
+        width: 29mm;
+        color: #5f6f89;
+    }
+
+    .footnote {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 3mm;
+        margin-top: 3mm;
+    }
+
+    .note-box {
+        border: 1px solid var(--line);
+        border-radius: 4mm;
+        padding: 3mm 3.5mm;
+        background: linear-gradient(180deg, #fbfdff, #f6f9ff);
+    }
+
+    .note-box .label {
+        font-size: 7.1pt;
+        font-weight: 800;
+        color: var(--navy);
+        margin-bottom: 1.4mm;
+    }
+
+    .note-box p,
+    .note-box li {
+        font-size: 7pt;
+        color: #5d6d87;
+        line-height: 1.55;
+    }
+
+    .note-box ul {
+        list-style: none;
+        display: grid;
+        gap: 1mm;
+    }
+
+    .note-box li::before {
+        content: "•";
+        color: var(--blue);
+        margin-right: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="page">
+    <section class="hero">
+        <div class="hero-top">
+            <div>
+                <div class="hero-kicker">MagStar Timeline Showcase</div>
+                <h1>磁星計畫 展示版甘特圖</h1>
+                <p>
+                    本頁為展示用途之虛構專案範例，用來示範甘特圖在提案簡報、專案排程與視覺呈現上的可能性。
+                    專案內容、時程、里程碑與任務名稱皆為示意編排，與任何實際案件無直接關聯。
+                </p>
+            </div>
+            <div class="hero-badge">
+                <div class="label">展示版本</div>
+                <div class="value">16 週</div>
+                <div class="sub">A4 Portrait Layout</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="content">
+        <section class="summary">
+            <div class="summary-card">
+                <div class="label">虛構專案主題</div>
+                <div class="value">磁星感知展演計畫</div>
+                <div class="desc">以「光、聲、移動路徑」打造一場充滿未來感的沉浸式展示專案。</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">展示重點</div>
+                <div class="value">高辨識時間軸</div>
+                <div class="desc">用色塊、階段名稱與週次切分，讓排程一眼就看懂，也更適合簡報展示。</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">建議用途</div>
+                <div class="value">提案 / Demo / 範例頁</div>
+                <div class="desc">適合當作版型展示、範例作品，或拿來跟客戶說明甘特圖的視覺效果。</div>
+            </div>
+        </section>
+
+        <div class="section-head">
+            <div class="section-title">專案時程總覽</div>
+            <div class="section-note">期間：2026 / 09 / 07 至 2026 / 12 / 27</div>
+        </div>
+
+        <div class="legend" id="legend"></div>
+
+        <div class="chart-wrap">
+            <div class="grid" id="grid"></div>
+        </div>
+
+        <div class="section-head">
+            <div class="section-title">工作項目說明</div>
+            <div class="section-note">以下內容皆為展示用虛構文字</div>
+        </div>
+
+        <div class="detail-card">
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th style="width: 7mm; text-align: center;">#</th>
+                        <th style="width: 30mm;">階段名稱</th>
+                        <th style="width: 29mm;">預計區間</th>
+                        <th>工作內容摘要</th>
+                    </tr>
+                </thead>
+                <tbody id="detailBody"></tbody>
+            </table>
+        </div>
+
+        <section class="footnote">
+            <div class="note-box">
+                <div class="label">展示版里程碑</div>
+                <ul>
+                    <li>09 / 07 啟動磁場命題盤整</li>
+                    <li>10 / 12 完成主視覺與場景語言確認</li>
+                    <li>11 / 22 完成內部預演與壓力測試</li>
+                    <li>11 / 28 舉辦媒體預覽夜</li>
+                    <li>12 / 20 完成磁星公開展演</li>
+                </ul>
+            </div>
+            <div class="note-box">
+                <div class="label">備註</div>
+                <p>
+                    此頁面特別採用較強烈的視覺層次與色彩節奏，目的不是追求真實專案細節，而是讓觀眾直接感受到
+                    「甘特圖也可以做得很漂亮、很像品牌型提案頁」。
+                </p>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    (function () {
+        const TASKS = [
+            {
+                phase: "磁場命題盤整",
+                stage: "第 1 - 2 週｜09/07 - 09/20",
+                s: "2026-09-07",
+                e: "2026-09-20",
+                color: "#2ec5ff",
+                cls: "c0",
+                items: "梳理展示核心概念、設定觀展情緒曲線、整理磁星世界觀的語彙與視覺關鍵字。"
+            },
+            {
+                phase: "星圖世界觀設定",
+                stage: "第 2 - 4 週｜09/14 - 10/04",
+                s: "2026-09-14",
+                e: "2026-10-04",
+                color: "#7b6cff",
+                cls: "c1",
+                items: "建立展演敘事章節、定義角色與場景命名系統，形成完整的展示故事線。"
+            },
+            {
+                phase: "主視覺與命名包裝",
+                stage: "第 3 - 5 週｜09/21 - 10/11",
+                s: "2026-09-21",
+                e: "2026-10-11",
+                color: "#b35dff",
+                cls: "c2",
+                items: "發展主標、標語、色彩系統與版面語言，並同步完成對外識別草案。"
+            },
+            {
+                phase: "互動場景原型打樣",
+                stage: "第 5 - 7 週｜10/05 - 10/25",
+                s: "2026-10-05",
+                e: "2026-10-25",
+                color: "#ff6c8e",
+                cls: "c3",
+                items: "規劃入口體驗、光牆、感應節點與互動裝置位置，產出第一版場域原型。"
+            },
+            {
+                phase: "光域聲景整合",
+                stage: "第 7 - 9 週｜10/19 - 11/08",
+                s: "2026-10-19",
+                e: "2026-11-08",
+                color: "#ffbe54",
+                cls: "c4",
+                items: "整合燈光節奏、背景聲景與提示音效，使觀展動線擁有連續的沉浸感。"
+            },
+            {
+                phase: "導覽腳本與體驗編排",
+                stage: "第 8 - 10 週｜10/26 - 11/15",
+                s: "2026-10-26",
+                e: "2026-11-15",
+                color: "#4ebc89",
+                cls: "c5",
+                items: "撰寫導覽腳本、定義關鍵停留點與互動提示語，優化整體節奏與轉場。"
+            },
+            {
+                phase: "內部預演與壓力測試",
+                stage: "第 10 - 11 週｜11/09 - 11/22",
+                s: "2026-11-09",
+                e: "2026-11-22",
+                color: "#4f7cff",
+                cls: "c6",
+                items: "模擬高峰人流、測試感應穩定度與投影節點，調整備援流程與現場細節。"
+            },
+            {
+                phase: "媒體預覽夜",
+                stage: "第 12 週｜11/23 - 11/29",
+                s: "2026-11-23",
+                e: "2026-11-29",
+                color: "#344766",
+                cls: "c7",
+                items: "安排體驗導覽、預覽場次流程、媒體拍攝動線與現場接待節奏。"
+            },
+            {
+                phase: "磁星公開展演",
+                stage: "第 13 - 15 週｜11/30 - 12/20",
+                s: "2026-11-30",
+                e: "2026-12-20",
+                color: "#ff5f9f",
+                cls: "c8",
+                items: "正式開展、執行每日場控與觀眾動線管理，持續蒐集回饋與修正細節。"
+            },
+            {
+                phase: "回收紀錄與星圖存檔",
+                stage: "第 15 - 16 週｜12/14 - 12/27",
+                s: "2026-12-14",
+                e: "2026-12-27",
+                color: "#15253e",
+                cls: "c9",
+                items: "整理照片與影像、彙整觀眾觀測筆記、輸出展示回顧頁與典藏版素材。"
+            }
+        ];
+
+        const START = new Date(2026, 8, 7);
+        const WEEKS = 16;
+        const orbitStarts = new Set([0, 4, 8, 12]);
+        const monthHeaders = [
+            { label: "9 月　SEP", span: 4, gridStart: 2 },
+            { label: "10 月　OCT", span: 4, gridStart: 6 },
+            { label: "11 月　NOV", span: 4, gridStart: 10 },
+            { label: "12 月　DEC", span: 4, gridStart: 14 }
+        ];
+
+        function dayOffset(dateStr) {
+            const d = new Date(dateStr);
+            return Math.round((d - START) / 86400000);
+        }
+
+        function toWeekCol(day) {
+            return Math.max(0, Math.min(Math.floor(day / 7), WEEKS - 1));
+        }
+
+        const weekDates = [];
+        for (let w = 0; w < WEEKS; w += 1) {
+            const d = new Date(START);
+            d.setDate(d.getDate() + w * 7);
+            weekDates.push(`${d.getMonth() + 1}/${d.getDate()}`);
+        }
+
+        const grid = document.getElementById("grid");
+        let gridHtml = "";
+
+        gridHtml += '<div class="hdr-corner" style="grid-row:1/2;grid-column:1/2;">階段 / 展示工作</div>';
+        monthHeaders.forEach((month) => {
+            gridHtml += `<div class="hdr-month" style="grid-row:1/2;grid-column:${month.gridStart}/${month.gridStart + month.span};">${month.label}</div>`;
+        });
+
+        gridHtml += '<div style="grid-row:2/3;grid-column:1/2;background:#f9fbff;border-bottom:1px solid #e2eaf6;"></div>';
+        for (let w = 0; w < WEEKS; w += 1) {
+            const startClass = orbitStarts.has(w) ? " orbit-start" : "";
+            gridHtml += `
+                <div class="hdr-week${startClass}" style="grid-row:2/3;grid-column:${w + 2}/${w + 3};">
+                    W${String(w + 1).padStart(2, "0")}<br>
+                    <span style="font-size:5.6pt;color:#8998ad;">${weekDates[w]}</span>
+                </div>
+            `;
+        }
+
+        const baseRow = 3;
+        TASKS.forEach((task, index) => {
+            const row = baseRow + index;
+            const altClass = index % 2 === 0 ? "" : " alt";
+
+            gridHtml += `
+                <div class="row-label" style="grid-row:${row}/${row + 1};grid-column:1/2;">
+                    <div class="phase">${task.phase}</div>
+                    <div class="stage">${task.stage}</div>
+                </div>
+            `;
+
+            for (let w = 0; w < WEEKS; w += 1) {
+                const startClass = orbitStarts.has(w) ? " orbit-start" : "";
+                gridHtml += `<div class="cell${altClass}${startClass}" style="grid-row:${row}/${row + 1};grid-column:${w + 2}/${w + 3};"></div>`;
+            }
+
+            const startWeek = toWeekCol(dayOffset(task.s));
+            const endWeek = toWeekCol(dayOffset(task.e));
+            const colStart = startWeek + 2;
+            const colEnd = Math.min(endWeek + 3, WEEKS + 2);
+
+            gridHtml += `
+                <div class="bar-layer" style="grid-row:${row}/${row + 1};grid-column:${colStart}/${colEnd};">
+                    <div class="bar ${task.cls}">${task.phase}</div>
+                </div>
+            `;
+        });
+
+        grid.innerHTML = gridHtml;
+        grid.style.gridTemplateRows = `auto auto repeat(${TASKS.length}, 11mm)`;
+
+        const legend = document.getElementById("legend");
+        TASKS.forEach((task) => {
+            legend.innerHTML += `<span><i style="background:${task.color};"></i>${task.phase}</span>`;
+        });
+
+        const detailBody = document.getElementById("detailBody");
+        TASKS.forEach((task, index) => {
+            detailBody.innerHTML += `
+                <tr>
+                    <td class="td-no"><span style="background:${task.color};">${String(index + 1).padStart(2, "0")}</span></td>
+                    <td class="td-phase" style="border-left:3px solid ${task.color};">${task.phase}</td>
+                    <td class="td-stage">${task.stage}</td>
+                    <td>${task.items}</td>
+                </tr>
+            `;
+        });
+    }());
+</script>
+</body>
+</html>

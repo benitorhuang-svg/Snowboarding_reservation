@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退款與發票精靈 | SkiFun Finance Wizard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; color: #0f172a; padding: 4rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .wizard-card { background: white; border-radius: 40px; padding: 4rem; width: 100%; max-width: 800px; border: 1px solid #e2e8f0; box-shadow: var(--shadow-deep); }
+        .rule-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1.5rem; border-radius: 20px; background: #fcfdfe; border: 1px solid #e2e8f0; margin-bottom: 1rem; transition: 0.3s; }
+        .rule-item.highlight { border-color: #ef4444; background: #fef2f2; }
+    </style>
+</head>
+<body>
+    <div class="wizard-card">
+        <h1 style="font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px; margin-bottom: 2rem;">退款試算與發票管理</h1>
+        
+        <div style="margin-bottom:3rem;">
+            <p style="font-weight:800; color:#64748b; margin-bottom:1.5rem; font-size:0.9rem; text-transform:uppercase;">課程退款規則說明</p>
+            <div class="rule-item">
+                <div style="width:24px; height:24px; border-radius:50%; background:#22c55e; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;">1</div>
+                <div>
+                    <div style="font-weight:900;">開課前 7 天</div>
+                    <div style="font-size:0.8rem; color:#64748b; font-weight:700;">支持 100% 全額退款至原支付工具。</div>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div style="width:24px; height:24px; border-radius:50%; background:#f97316; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;">2</div>
+                <div>
+                    <div style="font-weight:900;">開課前 3-6 天</div>
+                    <div style="font-size:0.8rem; color:#64748b; font-weight:700;">支持 50% 折半退款。</div>
+                </div>
+            </div>
+            <div class="rule-item highlight">
+                <div style="width:24px; height:24px; border-radius:50%; background:#ef4444; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;">3</div>
+                <div>
+                    <div style="font-weight:900;">開課前 48 小時內</div>
+                    <div style="font-size:0.8rem; color:#ef4444; font-weight:700;">恕不接受退款申請。</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:#f8fafc; padding:2rem; border-radius:24px; border:1px solid #e2e8f0;">
+            <h3 style="font-weight:950; margin-bottom:1.5rem;">預估退款金額</h3>
+            <div style="display:flex; justify-content:space-between; font-weight:900; font-family:'Outfit'; font-size:1.8rem;">
+                <span>REFUND ESTIMATE</span>
+                <span style="color:#ef4444;">¥ 0</span>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

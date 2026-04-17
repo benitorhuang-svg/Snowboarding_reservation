@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預約課程 | SkiFun Japan</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f172a;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: var(--secondary); padding-bottom: 2rem; }
+
+        header { height: 72px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 4rem; position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: 'Outfit'; font-weight: 950; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; }
+
+        .booking-hero { height: 250px; background: linear-gradient(135deg, #2563eb, #1e40af); color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+        .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 3rem; max-width: 1200px; margin: -50px auto 0; padding: 0 2rem; position: relative; z-index: 2; }
+        
+        .card { background: white; border-radius: 32px; padding: 2.5rem; border: 1px solid var(--border); box-shadow: var(--shadow-deep); }
+        .timeslot { border: 2px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: var(--transition); display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .timeslot:hover { border-color: var(--primary); background: #fcfdfe; }
+        .timeslot.selected { border-color: var(--primary); background: rgba(37,99,235,0.05); }
+
+        .timer-badge { background: #fee2e2; color: #ef4444; font-weight: 950; font-family: 'Outfit'; padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="landing.html" class="logo">
+            <div style="background:var(--primary); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;"><i data-lucide="mountain" style="width:18px;"></i></div>
+            SkiFun
+        </a>
+        <div class="timer-badge">
+            <i data-lucide="clock" style="width:14px;"></i>
+            <span id="timer">09:59</span>
+        </div>
+    </header>
+
+    <div class="booking-hero">
+        <div>
+            <h1 style="font-size:2.5rem; font-weight:950; letter-spacing:-1px;">選擇您的滑雪時段</h1>
+            <p style="font-weight:700; opacity:0.8; margin-top:0.5rem;">專業教練帶領，探索二世谷極致粉雪。</p>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="card">
+            <h3 style="font-size: 1.4rem; font-weight: 950; margin-bottom: 2rem;">2026年12月24日 (週四)</h3>
+            
+            <div class="timeslot selected">
+                <div>
+                    <div style="font-family:'Outfit'; font-weight:900; font-size:1.2rem;">09:00 - 11:00</div>
+                    <div style="font-size:0.8rem; font-weight:800; color:#64748b;">早晨初階體驗課程 (2小時)</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-family:'Outfit'; font-weight:900; font-size:1.1rem; color:var(--primary);">¥ 12,800</div>
+                    <div style="font-size:0.7rem; font-weight:900; color:#10b981;">最後 2 個名額</div>
+                </div>
+            </div>
+
+            <div class="timeslot">
+                <div>
+                    <div style="font-family:'Outfit'; font-weight:900; font-size:1.2rem;">13:00 - 16:00</div>
+                    <div style="font-size:0.8rem; font-weight:800; color:#64748b;">下午進階單板特訓 (3小時)</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-family:'Outfit'; font-weight:900; font-size:1.1rem; color:var(--primary);">¥ 18,500</div>
+                    <div style="font-size:0.7rem; font-weight:900; color:#64748b;">剩餘 6 個名額</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="height: fit-content; position: sticky; top: 100px;">
+            <h3 style="font-size: 1.25rem; font-weight: 950; margin-bottom: 1.5rem;">結帳明細</h3>
+            <div style="display:flex; flex-direction:column; gap:1rem; margin-bottom:2rem;">
+                <div style="display:flex; justify-content:space-between; font-weight:700;"><span>課程金額</span><span style="font-family:'Outfit';">¥ 12,800</span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:700;"><span>裝備租借</span><span style="font-family:'Outfit';">¥ 0</span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:700; border-top:1px solid #f1f5f9; padding-top:1rem; font-size:1.1rem; color:var(--primary);"><span>應付總額</span><span style="font-family:'Outfit'; font-weight:950;">¥ 12,800</span></div>
+            </div>
+            <button class="neon-btn" style="width:100%;" onclick="confirmBooking()">立即預約並支付</button>
+            <p style="margin-top:1rem; font-size:0.7rem; color:#64748b; font-weight:700; text-align:center;">
+                <i data-lucide="shield-check" style="width:12px; vertical-align:middle;"></i> 全球加密支付保護 (TapPay)
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+
+        // 倒數計時計
+        let timeLeft = 600;
+        const timerEl = document.getElementById('timer');
+        setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerEl.innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+            }
+        }, 1000);
+
+        window.confirmBooking = function() {
+            const state = SkiFunState.get();
+            SkiFunState.addTransaction({
+                user: 'DEMO_USER_99',
+                amount: 12800,
+                coach: '佐藤 健一'
+            });
+            alert('預約成功！訂單已建立。');
+        }
+    </script>
+</body>
+</html>

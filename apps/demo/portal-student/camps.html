@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>營隊行程展示 | SkiFun Camp Itinerary</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; color: #0f172a; padding: 4rem; }
+        .itinerary-card { background: white; border-radius: 40px; padding: 3rem; border: 1px solid #e2e8f0; max-width: 1000px; margin: 0 auto; box-shadow: var(--shadow-deep); }
+        .timeline { position: relative; padding-left: 3rem; margin-top: 3rem; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #e2e8f0; border-radius: 99px; }
+        .time-node { position: relative; margin-bottom: 2.5rem; }
+        .time-node::before { content: ''; position: absolute; left: -3.3rem; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--primary); border: 4px solid white; box-shadow: 0 0 10px rgba(37,99,235,0.3); }
+    </style>
+</head>
+<body>
+    <div class="itinerary-card">
+        <h1 style="font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px; margin-bottom: 1rem;">星際粉雪五日營 (Niseko Camp)</h1>
+        <p style="color:#64748b; font-weight:700;">深度探索二世谷四大雪場，結合錄影檢討與高端溫泉體驗。</p>
+
+        <div class="timeline">
+            <div class="time-node">
+                <div style="font-family:'Outfit'; font-weight:900; color:var(--primary); font-size:1.1rem; margin-bottom:0.5rem;">DAY 01 - 抵達與基礎評估</div>
+                <div style="font-weight:700; color:#64748b;">前往新千歲機場專車接送至二世谷。下午進行各等級分班評估。</div>
+            </div>
+            <div class="time-node">
+                <div style="font-family:'Outfit'; font-weight:900; color:var(--primary); font-size:1.1rem; margin-bottom:0.5rem;">DAY 02 - 動態轉彎與技巧精進</div>
+                <div style="font-weight:700; color:#64748b;">針對 SB 等級進行動態連續轉彎特訓。晚間進行動作錄影深度分析。</div>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

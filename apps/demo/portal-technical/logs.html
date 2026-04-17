@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統日誌與監控 | SkiFun Tech Logs</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #020617; color: #94a3b8; padding: 4rem; }
+        .log-container { background: #0f172a; border-radius: 24px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 40px 100px rgba(0,0,0,0.5); font-family: 'Courier New', Courier, monospace; }
+        .log-entry { margin-bottom: 1.5rem; display: flex; gap: 1.5rem; }
+        .timestamp { color: #38bdf8; font-weight: 700; white-space: nowrap; }
+        .tag { padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 950; }
+        .payload { background: #1e293b; padding: 1rem; border-radius: 8px; color: #a5f3fc; margin-top: 0.5rem; font-size: 0.8rem; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <h1 style="color:white; font-size: 2.2rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 3rem;">Technical Webhook Monitor</h1>
+
+    <div class="log-container">
+        <div class="log-entry">
+            <span class="timestamp">01:25:44.204</span>
+            <div>
+                <span class="tag" style="background:rgba(16,185,129,0.1); color:#10b981; border:1px solid #10b981;">TAPPAY_WEBHOOK</span>
+                <div style="color:white; font-weight:700; margin-top:0.4rem;">HMAC SHA-256 Signature Verified</div>
+                <div class="payload">
+{
+  "status": 0,
+  "msg": "Success",
+  "amount": 12800,
+  "rec_trade_id": "TP_20260418_X92J",
+  "bank_transaction_id": "BK82410"
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="log-entry">
+            <span class="timestamp">01:25:46.115</span>
+            <div>
+                <span class="tag" style="background:rgba(59,130,246,0.1); color:#3b82f6; border:1px solid #3b82f6;">ECPAY_INVOICE</span>
+                <div style="color:white; font-weight:700; margin-top:0.4rem;">Invoice Issued Successfully</div>
+                <div class="payload">
+{ "InvoiceNo": "AL12345678", "RandomNum": "9901" }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

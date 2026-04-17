@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全域系統配置 | SkiFun Config</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #0f172a; color: white; padding: 4rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .config-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); border-radius: 40px; padding: 4rem; width: 100%; max-width: 600px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 40px 100px rgba(0,0,0,0.5); }
+        .config-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        input[type="range"] { flex: 1; margin: 0 2rem; }
+    </style>
+</head>
+<body>
+    <div class="config-card">
+        <h1 style="font-family:'Outfit'; font-size:2rem; font-weight:950; margin-bottom:1rem; display:flex; align-items:center; gap:0.8rem;"><i data-lucide="settings" style="color:#3b82f6;"></i> Master Config</h1>
+        <p style="color:#94a3b8; font-weight:700; margin-bottom:3rem;">全局系統參數控制中心。此處更動將影響所有 18 個支柱模組。</p>
+
+        <div class="config-item">
+            <div style="width:150px;">
+                <div style="font-weight:950; font-size:0.9rem;">Price Multiplier</div>
+                <div style="font-size:0.7rem; color:#64748b; font-weight:800;">動態定價倍率</div>
+            </div>
+            <input type="range" min="1" max="3" step="0.1" value="1.8" id="multiplier-slider">
+            <div style="font-family:'Outfit'; font-weight:950; font-size:1.5rem; color:#3b82f6;" id="multiplier-val">1.8x</div>
+        </div>
+
+        <div class="config-item">
+            <div>
+                <div style="font-weight:950; font-size:0.9rem;">Maintenance Mode</div>
+                <div style="font-size:0.7rem; color:#64748b; font-weight:800;">全域維護模式啟動</div>
+            </div>
+            <button class="neon-btn" style="background:#ef4444; border-color:rgba(239,68,68,0.3); font-size:0.75rem; padding:0.6rem 1.25rem;">下線系統</button>
+        </div>
+
+        <button class="neon-btn" style="width:100%; margin-top:2rem;" onclick="saveConfig()">保存全域配置 (Push to Shared State)</button>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+
+        const slider = document.getElementById('multiplier-slider');
+        const val = document.getElementById('multiplier-val');
+        
+        slider.addEventListener('input', (e) => {
+            val.innerText = e.target.value + 'x';
+            if (navigator.vibrate) navigator.vibrate(10);
+        });
+
+        window.saveConfig = function() {
+            SkiFunState.updateSystem({ multiplier: parseFloat(slider.value) });
+            alert('全域配置已更新，所有頁面將實時同步售價與加成。');
+        }
+    </script>
+</body>
+</html>

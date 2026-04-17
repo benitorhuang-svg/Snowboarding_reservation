@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Story: React.FC = () => {
@@ -45,7 +45,7 @@ const Story: React.FC = () => {
         <div className="flex-1 relative group animate-fade-in-up delay-400">
           <div className="absolute -inset-4 border border-accent-blue/10 rounded-3xl -z-10 group-hover:scale-105 transition-transform duration-700"></div>
           <img
-            src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&q=80&w=1200"
+            src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/story.png`}
             alt="Snowboarding story"
             className="w-full h-[380px] object-cover rounded-2xl transition-all duration-1000 shadow-2xl"
           />

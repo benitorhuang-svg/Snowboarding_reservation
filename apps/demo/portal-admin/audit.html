@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人力資源審核 | SkiFun Audit</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; color: #0f172a; padding: 4rem; }
+        .audit-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+        .audit-item { background: white; border-radius: 20px; padding: 2rem; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+    <div class="audit-grid">
+        <h1 style="font-size: 2rem; font-weight: 950; margin-bottom: 2rem;">教練入駐審核 (Personnel Audit)</h1>
+        <div class="audit-item">
+            <div style="display:flex; gap:1.5rem; align-items:center;">
+                <div style="width:50px; height:50px; background:#f1f5f9; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:950; color:var(--primary);">SK</div>
+                <div>
+                    <div style="font-weight:900;">佐藤 健一 (Sato Kenichi)</div>
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700;">申請時間：2026-12-24 10:20 | 證照：CASI Level 3</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:1rem;">
+                <button style="padding:0.6rem 1.25rem; border-radius:10px; border:1px solid #e2e8f0; font-weight:900; background:white; color:#ef4444;">拒絕</button>
+                <button class="neon-btn" style="padding:0.6rem 1.25rem;">核准入駐</button>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

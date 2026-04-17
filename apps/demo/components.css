@@ -1,0 +1,99 @@
+/* 
+   SkiFun Premium UI Component Library (v1.0)
+   Designed for High-Fidelity Prototypes & Future React Migration
+*/
+
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: 25px;
+    --primary-neon: #2563eb;
+    --primary-glow: rgba(37, 99, 235, 0.3);
+    --shadow-deep: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* --- [1] The Premium Glass Card --- */
+.premium-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    box-shadow: var(--shadow-deep);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-glass:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- [2] The Neon Interactive Button --- */
+.neon-btn {
+    padding: 1.25rem 2.5rem;
+    border-radius: 20px;
+    border: none;
+    background: var(--primary-neon);
+    color: white;
+    font-weight: 950;
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.4s var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.neon-btn:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 15px 45px var(--primary-glow);
+    filter: brightness(1.1);
+}
+
+.neon-btn:active {
+    transform: scale(0.98);
+}
+
+/* --- [3] Status Pulse Pill --- */
+.pulse-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: white;
+}
+
+.pulse-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981; /* Default Live Green */
+    animation: pill-pulse 1.5s infinite;
+}
+
+@keyframes pill-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.4; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- [4] Persona Chip --- */
+.persona-chip {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}

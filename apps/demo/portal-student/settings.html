@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人設定與支付 | SkiFun Student</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; color: #0f172a; padding: 4rem; }
+        .settings-container { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 3rem; }
+        .card { background: white; border-radius: 32px; padding: 2.5rem; border: 1px solid #e2e8f0; box-shadow: var(--shadow-deep); }
+        .input-group { margin-bottom: 2rem; }
+        .input-group label { display: block; font-size: 0.75rem; font-weight: 950; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .input-group select, .input-group input { width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 700; font-family: inherit; }
+        .wallet-item { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; background: #fcfdfe; border: 1px solid #e2e8f0; border-radius: 20px; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="settings-container">
+        <aside>
+            <div style="font-weight:950; font-size:1.4rem; margin-bottom:2rem; font-family:'Outfit';">Settings</div>
+            <nav style="display:flex; flex-direction:column; gap:0.5rem;">
+                <button style="text-align:left; padding:1rem; border-radius:12px; background:var(--primary); color:white; border:none; font-weight:900;">帳號與個人檔案</button>
+                <button style="text-align:left; padding:1rem; border-radius:12px; background:transparent; color:#64748b; border:none; font-weight:900;">支付工具管理</button>
+            </nav>
+        </aside>
+
+        <main style="display:flex; flex-direction:column; gap:2rem;">
+            <section class="card">
+                <h3 style="font-weight:950; margin-bottom:2rem;">個人化設定</h3>
+                <div class="input-group">
+                    <label>滑雪等級 (Skill Level)</label>
+                    <select id="skill-level">
+                        <option value="beginner">Beginner - 初學體驗</option>
+                        <option value="intermediate" selected>Intermediate - 進階轉彎</option>
+                        <option value="advanced">Advanced - 專家刻蝕</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>偏好語言 (Preferred Language)</label>
+                    <select>
+                        <option>繁體中文 (Taiwan)</option>
+                        <option>English (Global)</option>
+                        <option>日本語 (Japan)</option>
+                    </select>
+                </div>
+                <button class="neon-btn" style="width:100%;" onclick="saveSettings()">儲存變更</button>
+            </section>
+
+            <section class="card">
+                <h3 style="font-weight:950; margin-bottom:1.5rem;">付款方法 (TapPay Vault)</h3>
+                <div class="wallet-item">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <i data-lucide="credit-card" style="color:var(--primary);"></i>
+                        <div>
+                            <div style="font-family:'Outfit'; font-weight:900;">**** **** **** 8245</div>
+                            <div style="font-size:0.7rem; color:#94a3b8; font-weight:800;">VISA | 有效期 12/28</div>
+                        </div>
+                    </div>
+                    <span style="font-size:0.6rem; font-weight:950; color:#10b981; background:rgba(16,185,129,0.1); padding:4px 10px; border-radius:99px;">PRIMARY</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+        window.saveSettings = function() {
+            alert('設定已同步！系統將根據您的滑雪等級推薦對應難度的教練。');
+        }
+    </script>
+</body>
+</html>

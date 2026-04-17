@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>評價審核中心 | SkiFun Feedback</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; color: #0f172a; padding: 4rem; }
+        .feedback-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+        .review-card { background: white; border-radius: 24px; padding: 2rem; border: 1px solid #e2e8f0; box-shadow: var(--shadow-premium); }
+        .star-rating { color: #facc15; display: flex; gap: 2px; }
+    </style>
+</head>
+<body>
+
+    <h1 style="font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px; margin-bottom: 3rem; text-align:center;">口碑與評價審核 (Reputation Manager)</h1>
+
+    <div class="feedback-grid">
+        <div class="review-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem;">
+                <div style="display:flex; gap:1rem; align-items:center;">
+                    <div style="width:44px; height:44px; border-radius:12px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-weight:950; color:var(--primary);">MS</div>
+                    <div>
+                        <div style="font-weight:900;">Mika Sato <span style="font-weight:500; color:#94a3b8; font-size:0.8rem;">(二世谷初階班)</span></div>
+                        <div class="star-rating"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+                    </div>
+                </div>
+                <div style="font-size:0.7rem; color:#94a3b8; font-weight:800;">2026-12-24 16:30</div>
+            </div>
+            <p style="font-weight:700; line-height:1.6; color:#475569;">教練非常細心，對於重心轉換的講解很清楚，第一次滑雪就能連續轉彎了！非常推薦！</p>
+            <div style="margin-top:2rem; display:flex; gap:1rem;">
+                <button style="padding:0.6rem 1.25rem; border-radius:10px; border:1px solid #e2e8f0; font-weight:900; background:white; font-size:0.85rem;">加為推薦精選</button>
+                <button style="padding:0.6rem 1.25rem; border-radius:10px; border:none; background:#f1f5f9; font-weight:900; color:#64748b; font-size:0.85rem;">隱藏評論</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>營運數據中心 | SkiFun Japan Admin</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --secondary: #0f172a;
+            --success: #10b981;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --shadow-premium: 0 10px 50px -10px rgba(15, 23, 42, 0.08);
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: var(--secondary); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        aside { width: 280px; background: var(--secondary); padding: 2.5rem; display: flex; flex-direction: column; gap: 3rem; position: fixed; height: 100vh; color: white; z-index: 100; }
+        .logo { display:flex; align-items:center; gap:0.8rem; text-decoration:none; color:white; font-size:1.6rem; font-weight:950; font-family:'Outfit'; }
+        
+        main { flex-grow: 1; padding: 3rem 4rem; margin-left: 280px; width: 100%; max-width: 1400px; }
+        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; }
+        h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 3rem; }
+        .stat-card { background: white; border-radius: 32px; padding: 2rem; border: 1px solid var(--border); box-shadow: var(--shadow-premium); transition: var(--transition); }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .stat-val { font-family: 'Outfit'; font-size: 2.4rem; font-weight: 900; margin: 0.5rem 0; letter-spacing: -1px; }
+
+        .content-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2.5rem; }
+        .chart-card { background: white; border-radius: 40px; padding: 3rem; border: 1px solid var(--border); box-shadow: var(--shadow-premium); height: 500px; position: relative; }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo">
+            <div class="logo-icon" style="background:var(--primary); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;"><i data-lucide="mountain" style="width:18px;"></i></div>
+            <span>SkiFun<span style="color: var(--primary);">Admin</span></span>
+        </div>
+        <nav style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <a href="#" style="background: rgba(255,255,255,0.05); color: white; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; border-radius: 10px;"><i data-lucide="layout-dashboard" style="width: 18px;"></i> 營運數據總覽</a>
+            <a href="insights.html" style="color: #94a3b8; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem;"><i data-lucide="bar-chart-3" style="width: 18px;"></i> 商業智能分析</a>
+            <a href="resources.html" style="color: #94a3b8; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem;"><i data-lucide="users" style="width: 18px;"></i> 教練資源調度</a>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1>營運全局大腦 (Admin Dashboard)</h1>
+                <p style="color: #64748b; font-weight: 600; margin-top: 0.5rem;">監控全日本雪場預約流水、教練稼動率與即時營收趨勢。</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button style="padding: 0.8rem 1.5rem; border-radius: 12px; border: 1px solid var(--border); background: white; font-weight: 800; font-size: 0.85rem; cursor: pointer;">匯出報告</button>
+            </div>
+        </header>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <span style="font-size: 0.75rem; font-weight: 950; color: #94a3b8; text-transform: uppercase;">總累計營收</span>
+                <div class="stat-val">¥ 12.8M</div>
+                <span style="color: var(--success); font-weight: 800; font-size: 0.8rem;"><i data-lucide="trending-up" style="width: 14px; vertical-align: middle;"></i> +14.2%</span>
+            </div>
+            <div class="stat-card">
+                <span style="font-size: 0.75rem; font-weight: 950; color: #94a3b8; text-transform: uppercase;">本月預約數</span>
+                <div class="stat-val">1,284</div>
+                <span style="color: var(--success); font-weight: 800; font-size: 0.8rem;"><i data-lucide="trending-up" style="width: 14px; vertical-align: middle;"></i> +8.1%</span>
+            </div>
+            <div class="stat-card" style="border-bottom: 4px solid #10b981;">
+                <span style="font-size: 0.75rem; font-weight: 950; color: #94a3b8; text-transform: uppercase;">教練稼動率</span>
+                <div class="stat-val">92.4%</div>
+                <span style="color: #64748b; font-weight: 800; font-size: 0.8rem;">極高負載水平</span>
+            </div>
+            <div class="stat-card">
+                <span style="font-size: 0.75rem; font-weight: 950; color: #94a3b8; text-transform: uppercase;">未結算金額</span>
+                <div class="stat-val">¥ 154K</div>
+                <span style="color: #f97316; font-weight: 800; font-size: 0.8rem;">3 筆待審核款項</span>
+            </div>
+        </div>
+
+        <div class="content-layout">
+            <div class="chart-card">
+                <h3 style="font-size: 1.25rem; font-weight: 950; margin-bottom: 2rem;">營收增長趨勢 (Forecast Mode)</h3>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div style="background: white; border-radius: 40px; border: 1px solid var(--border); box-shadow: var(--shadow-premium); padding: 2.5rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 950; margin-bottom: 1.5rem;">最近預約交易</h3>
+                <div id="tx-list">
+                    <!-- Transactions injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+
+        function updateUI() {
+            const state = SkiFunState.get();
+            const txList = document.getElementById('tx-list');
+            txList.innerHTML = state.finance.transactions.map(tx => `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #f1f5f9;">
+                    <div>
+                        <div style="font-weight:900; font-size:0.9rem;">${tx.user}</div>
+                        <div style="font-size:0.7rem; color:#94a3b8; font-weight:700;">${tx.time}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-family:'Outfit'; font-weight:900; color:var(--primary);">¥ ${tx.amount.toLocaleString()}</div>
+                        <div style="font-size:0.65rem; background:#f1f5f9; padding:2px 8px; border-radius:99px; font-weight:900; display:inline-block;">${tx.coach || '佐藤 健一'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        updateUI();
+        window.addEventListener('skifun-state-change', updateUI);
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 300);
+        grad.addColorStop(0, 'rgba(37, 99, 235, 0.2)'); grad.addColorStop(1, 'rgba(37, 99, 235, 0)');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ data: [420, 850, 1200, 680, 450, 320], borderColor: '#2563eb', tension: 0.45, fill: true, backgroundColor: grad, borderWidth: 3 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display:false } }, scales: { y:{display:false}, x: { grid:{display:false} } } }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教練收益報表 | SkiFun Coach Income</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background: #0f172a; color: white; padding: 4rem; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
+        .data-card { background: rgba(255,255,255,0.05); border-radius: 32px; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .income-val { font-family: 'Outfit'; font-size: 2.4rem; font-weight: 900; color: #10b981; margin: 0.5rem 0; }
+        .table-card { background: white; border-radius: 32px; padding: 3rem; color: #0f172a; border: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+
+    <header style="margin-bottom: 3rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h1 style="font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px;">收益與結算中心 (Income Hub)</h1>
+            <p style="color:#94a3b8; font-weight:700;">即時追蹤您的課程分潤 (70% 拆帳比例) 與歷史提領紀錄。</p>
+        </div>
+        <button class="neon-btn">申請提領餘額</button>
+    </header>
+
+    <div class="grid">
+        <div class="data-card">
+            <span style="font-size:0.7rem; font-weight:950; color:#94a3b8; text-transform:uppercase;">本月已實現收益 (70% Split)</span>
+            <div class="income-val">¥ 482,500</div>
+            <div style="font-size:0.75rem; color:#10b981; font-weight:800;">+12% 較上月份成長</div>
+        </div>
+        <div class="data-card">
+            <span style="font-size:0.7rem; font-weight:950; color:#94a3b8; text-transform:uppercase;">待撥款餘額</span>
+            <div class="income-val" style="color:var(--primary);">¥ 84,200</div>
+            <div style="font-size:0.75rem; color:#94a3b8; font-weight:800;">預計下週一撥款</div>
+        </div>
+        <div class="data-card">
+            <span style="font-size:0.7rem; font-weight:950; color:#94a3b8; text-transform:uppercase;">累計總收益</span>
+            <div class="income-val" style="color:white;">¥ 2.84M</div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h3 style="font-weight:950; margin-bottom:2rem;">最近課酬明細</h3>
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr style="text-align:left; font-size:0.75rem; color:#94a3b8; font-weight:950; text-transform:uppercase;">
+                    <th style="padding:1rem;">課程日期</th>
+                    <th style="padding:1rem;">學員名稱</th>
+                    <th style="padding:1rem;">訂單總額</th>
+                    <th style="padding:1rem;">您的分潤 (70%)</th>
+                    <th style="padding:1rem;">狀態</th>
+                </tr>
+            </thead>
+            <tbody style="font-weight:700; font-size:0.9rem;">
+                <tr style="border-bottom:1px solid #f1f5f9;">
+                    <td style="padding:1.5rem; font-family:'Outfit';">2026-12-24</td>
+                    <td style="padding:1.5rem;">Mika Sato</td>
+                    <td style="padding:1.5rem; font-family:'Outfit'; color:#64748b;">¥ 12,800</td>
+                    <td style="padding:1.5rem; font-family:'Outfit'; color:var(--primary); font-weight:950;">¥ 8,960</td>
+                    <td style="padding:1.5rem;"><span style="color:#10b981;">已入帳</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

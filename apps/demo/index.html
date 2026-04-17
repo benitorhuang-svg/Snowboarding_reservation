@@ -1,64 +1,286 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>滑雪趣 Ski Fun - 開發導覽</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body class="bg-slate-50 flex items-center justify-center min-h-screen">
-    <div class="max-w-md w-full p-8 text-center">
-      <h1 class="text-4xl font-black text-primary mb-12 tracking-widest">
-        開發導覽
-      </h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkiFun Industrial V2.0 | 旗艦總覽門戶</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
 
-      <div class="space-y-4">
-        <a
-          href="example1/exam1.html"
-          class="block bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-slate-100 group"
-        >
-          <div
-            class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-primary"
-          >
-            Phase 1
-          </div>
-          <div class="text-xl font-bold text-slate-800">
-            Landing Page / 首頁
-          </div>
-        </a>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-        <a
-          href="example2/exam2.html"
-          class="block bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-slate-100 group"
-        >
-          <div
-            class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-primary"
-          >
-            Phase 2
-          </div>
-          <div class="text-xl font-bold text-slate-800">
-            Booking Portal / 預約門戶
-          </div>
-        </a>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f172a;
+            --nav-bg: #0f172a;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
-        <a
-          href="example3/exam3.html"
-          class="block bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-slate-100 group"
-        >
-          <div
-            class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1 group-hover:text-primary"
-          >
-            Phase 3
-          </div>
-          <div class="text-xl font-bold text-slate-800">
-            Management Dashboard / 管理後台
-          </div>
-        </a>
-      </div>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Unified Side Navigation (Icon Only Focused) */
+        nav.side-nav {
+            width: 80px;
+            background: var(--nav-bg);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+            z-index: 2000;
+            box-shadow: 20px 0 50px rgba(0,0,0,0.1);
+        }
+
+        .nav-logo {
+            width: 48px; height: 48px; background: var(--primary);
+            border-radius: 16px; margin-bottom: 4rem;
+            display: flex; align-items: center; justify-content: center; color: white;
+            box-shadow: 0 10px 20px rgba(37,99,235,0.3);
+        }
+
+        .nav-item {
+            width: 50px; height: 50px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; margin-bottom: 1.5rem; cursor: pointer;
+            transition: var(--transition); position: relative;
+        }
+        .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-item.active { color: white; background: var(--primary); box-shadow: 0 0 20px rgba(37,99,235,0.4); }
+
+        .nav-item::after {
+            content: attr(data-label);
+            position: absolute; left: 85px; top: 12px;
+            background: var(--secondary); color: white;
+            padding: 6px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 950;
+            white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(-10px);
+            transition: var(--transition);
+        }
+        .nav-item:hover::after { opacity: 1; transform: translateX(0); }
+
+        /* Secondary Module Bar (Expanded only when needed) */
+        .module-bar {
+            width: 300px; background: white; border-right: 1px solid #e2e8f0;
+            display: flex; flex-direction: column; padding: 2rem;
+            overflow-y: auto;
+        }
+        .module-group-label { font-size: 0.65rem; font-weight: 950; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin: 1.5rem 0 1rem; }
+        
+        .module-item {
+            padding: 1rem 1.25rem; border-radius: 14px; cursor: pointer;
+            transition: var(--transition); margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.75rem; border: 1px solid transparent;
+        }
+        .module-item:hover { background: #f8fafc; }
+        .module-item.active { background: #eff6ff; color: var(--primary); border-color: #dbeafe; }
+        .module-item h4 { font-size: 0.85rem; font-weight: 900; }
+        .module-item p { font-size: 0.65rem; font-weight: 800; color: #94a3b8; }
+
+        /* Main Viewport */
+        .viewport { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f8fafc; }
+        .viewport-header { height: 70px; background: white; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; border-bottom: 1px solid #e2e8f0; }
+        .current-module-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 950; font-size: 1.1rem; font-family: 'Outfit'; }
+
+        .preview-content { flex: 1; padding: 2rem; position: relative; display: flex; align-items: center; justify-content: center; }
+        .frame-wrapper { width: 100%; height: 100%; background: white; border-radius: 32px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.05); border: 8px solid white; transition: var(--transition); }
+        .frame-wrapper.is-mobile { width: 430px; height: 932px; border-radius: 60px; border: 12px solid #0f172a; margin: 0 auto; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .device-toggle-in-nav {
+            display: flex; flex-direction: column; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px;
+        }
+        .nav-toggle-btn {
+            width: 40px; height: 36px; border: none; background: transparent; color: #64748b; border-radius: 8px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center;
+        }
+        .nav-toggle-btn.active { background: white; color: var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <nav class="side-nav">
+        <div class="nav-logo"><i data-lucide="mountain"></i></div>
+        
+        <div class="nav-item active" data-label="Student Portal" onclick="switchHub('S', event)"><i data-lucide="user"></i></div>
+        <div class="nav-item" data-label="Coach Pro" onclick="switchHub('C', event)"><i data-lucide="zap"></i></div>
+        <div class="nav-item" data-label="Admin HQ" onclick="switchHub('A', event)"><i data-lucide="pie-chart"></i></div>
+        <div class="nav-item" data-label="Tech Core" onclick="switchHub('T', event)"><i data-lucide="terminal"></i></div>
+        
+        <div style="margin-top:auto; display:flex; flex-direction:column; align-items:center; gap:0.5rem; width:100%; border-top:1px solid rgba(255,255,255,0.05); padding-top:1.5rem;">
+            <div class="device-toggle-in-nav">
+                <button class="nav-toggle-btn active" id="btn-desktop" onclick="setDevice('desktop')"><i data-lucide="monitor" style="width:14px;"></i></button>
+                <button class="nav-toggle-btn" id="btn-mobile" onclick="setDevice('mobile')"><i data-lucide="smartphone" style="width:14px;"></i></button>
+            </div>
+            <div class="nav-item" data-label="Docs" style="margin-bottom:0"><i data-lucide="book"></i></div>
+        </div>
+    </nav>
+
+    <div class="module-bar" id="module-bar">
+        <!-- Submodules will be injected here -->
     </div>
-  </body>
+
+    <main class="viewport">
+        <header class="viewport-header">
+            <div class="current-module-title" id="module-title-box">
+                <i data-lucide="box" style="width:18px; color:var(--primary);"></i>
+                <span id="current-title">Loading Hub...</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:2rem;">
+                <div id="pwa-install-container" style="display:none; align-items:center; gap:0.5rem; background:#eff6ff; padding: 6px 12px; border-radius:10px; cursor:pointer; border:1px solid #dbeafe;" onclick="installPWA()">
+                    <i data-lucide="download" style="width:14px; color:var(--primary);"></i>
+                    <span style="font-size:0.7rem; font-weight:950; color:var(--primary); font-family:'Outfit';">INSTALL PWA</span>
+                </div>
+                <div style="font-family:'Outfit'; font-size:0.75rem; font-weight:900; color:#94a3b8;">SYSTEM STATUS: <span style="color:#10b981;">OPERATIONAL</span></div>
+            </div>
+        </header>
+
+        <section class="preview-content">
+            <div class="frame-wrapper" id="frame-wrapper">
+                <iframe id="main-frame" src=""></iframe>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import SkiFunState from './shared-state.js';
+        lucide.createIcons();
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('SW Registered:', reg.scope);
+                }).catch(err => {
+                    console.log('SW Registration Failed:', err);
+                });
+            });
+        }
+
+        // PWA Installation Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('pwa-install-container').style.display = 'flex';
+            lucide.createIcons(); // Re-render for the new icon
+        });
+
+        window.installPWA = async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('pwa-install-container').style.display = 'none';
+            }
+            deferredPrompt = null;
+        };
+
+        const hubs = {
+            'S': {
+                label: 'Student Experience',
+                modules: [
+                    { id: 'S00', title: '核心願景 (User Story)', path: 'user_story.html', tag: 'Core Vision' },
+                    { id: 'S01', title: '品牌首頁 (Landing)', path: 'portal-student/landing.html', tag: 'Discovery' },
+                    { id: 'S02', title: '認證中心 (Auth)', path: 'portal-student/auth.html', tag: 'Security' },
+                    { id: 'S03', title: '預約引擎 (Booking)', path: 'portal-student/booking.html', tag: 'Commerce' },
+                    { id: 'S04', title: '個人設定 (Profile)', path: 'portal-student/settings.html', tag: 'Identity' },
+                    { id: 'S05', title: '營隊行程 (Camps)', path: 'portal-student/camps.html', tag: 'Product' },
+                    { id: 'S06', title: '財務精靈 (Refund)', path: 'portal-student/refund-wizard.html', tag: 'Finance' }
+                ]
+            },
+            'C': {
+                label: 'Coach Workspace',
+                modules: [
+                    { id: 'C01', title: '排程管理', path: 'portal-coach/scheduler.html', tag: 'Operations' },
+                    { id: 'C02', title: '資歷證照', path: 'portal-coach/profile.html', tag: 'Identity' },
+                    { id: 'C03', title: '收益報表', path: 'portal-coach/earnings.html', tag: 'Payouts' },
+                    { id: 'C04', title: '行動終端', path: 'portal-coach/mobile.html', mobile:true, tag: 'Mobile' }
+                ]
+            },
+            'A': {
+                label: 'Admin Command Center',
+                modules: [
+                    { id: 'A01', title: '營運大腦 (Admin)', path: 'portal-admin/dashboard.html', tag: 'Insights' },
+                    { id: 'A02', title: '資源調度 (Ops)', path: 'portal-admin/resources.html', tag: 'Resources' },
+                    { id: 'A03', title: '語系編輯 (CMS)', path: 'portal-admin/content.html', tag: 'i18n' },
+                    { id: 'A04', title: '口碑管理 (SMM)', path: 'portal-admin/feedback.html', tag: 'Reputation' },
+                    { id: 'A05', title: '人員審核', path: 'portal-admin/audit.html', tag: 'Compliance' },
+                    { id: 'A06', title: '財務流水', path: 'portal-admin/finance.html', tag: 'Finance' }
+                ]
+            },
+            'T': {
+                label: 'Tech Core',
+                modules: [
+                    { id: 'T01', title: '系統配置 (Root)', path: 'portal-technical/config.html', tag: 'Config' },
+                    { id: 'T02', title: '監控日誌 (Logs)', path: 'portal-technical/logs.html', tag: 'Monitor' },
+                    { id: 'T03', title: '維護模式', path: 'portal-technical/maintenance.html', tag: 'Fault Tolerance' }
+                ]
+            }
+        };
+
+        window.switchHub = function(hubKey, event) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // If called from click, use event. If called programmatically, find the item
+            const target = event ? event.currentTarget : document.querySelector(`.nav-item[onclick*="switchHub('${hubKey}')"]`);
+            if (target) target.classList.add('active');
+            
+            const hub = hubs[hubKey];
+            const bar = document.getElementById('module-bar');
+            bar.innerHTML = `<div class="module-group-label">${hub.label}</div>`;
+            
+            hub.modules.forEach((mod, idx) => {
+                const el = document.createElement('div');
+                el.className = `module-item ${idx === 0 ? 'active' : ''}`;
+                el.id = `mod-${mod.id}`;
+                el.innerHTML = `
+                    <div style="font-family:'Outfit'; font-size:0.6rem; font-weight:950; color:var(--primary)">${mod.id}</div>
+                    <div style="flex:1">
+                        <h4>${mod.title}</h4>
+                        <p>${mod.tag}</p>
+                    </div>
+                `;
+                el.onclick = () => loadModule(mod);
+                bar.appendChild(el);
+            });
+
+            loadModule(hub.modules[0]);
+        }
+
+        function loadModule(mod) {
+            document.querySelectorAll('.module-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(`mod-${mod.id}`).classList.add('active');
+            
+            document.getElementById('main-frame').src = mod.path;
+            document.getElementById('current-title').innerText = `${mod.title} / SkiFun Industrial`;
+            setDevice(mod.mobile ? 'mobile' : 'desktop');
+        }
+
+        window.setDevice = function(type) {
+            const wrapper = document.getElementById('frame-wrapper');
+            const btns = { d: document.getElementById('btn-desktop'), m: document.getElementById('btn-mobile') };
+            if (type === 'mobile') {
+                wrapper.classList.add('is-mobile');
+                btns.m.classList.add('active');
+                btns.d.classList.remove('active');
+            } else {
+                wrapper.classList.remove('is-mobile');
+                btns.d.classList.add('active');
+                btns.m.classList.remove('active');
+            }
+        }
+
+        switchHub('S');
+    </script>
+</body>
 </html>

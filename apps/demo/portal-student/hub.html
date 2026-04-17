@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學員個人中心 | SkiFun Japan Hub</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f172a;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: var(--secondary); padding: 4rem; }
+
+        .hub-grid { display: grid; grid-template-columns: 350px 1fr; gap: 3rem; max-width: 1400px; margin: 0 auto; }
+        
+        .profile-card { background: white; border-radius: 32px; padding: 3rem; border: 1px solid var(--border); box-shadow: var(--shadow-deep); text-align: center; height: fit-content; }
+        .avatar { width: 120px; height: 120px; border-radius: 40px; margin: 0 auto 1.5rem; border: 4px solid var(--primary-glow); }
+
+        .content-card { background: white; border-radius: 32px; padding: 3rem; border: 1px solid var(--border); box-shadow: var(--shadow-premium); margin-bottom: 2rem; }
+        
+        .skill-node { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-radius: 20px; background: #f8fafc; border: 1px solid var(--border); transition: var(--transition); }
+        .skill-node:hover { transform: scale(1.02); border-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="hub-grid">
+        <aside class="profile-card">
+            <img src="../assets/premium_user_avatar_1776436415783.png" class="avatar">
+            <h2 style="font-size:1.8rem; font-weight:950; letter-spacing:-1px;">Mika Sato</h2>
+            <p style="color:#64748b; font-weight:800; font-size:0.8rem; margin-top:0.4rem;">PREMIUM MEMBER • LEVEL 4</p>
+            
+            <div style="margin-top:2.5rem; text-align:left;">
+                <div style="font-size:0.75rem; font-weight:950; color:#94a3b8; margin-bottom:1rem; text-transform:uppercase;">核心數值</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.8rem; font-weight:800;"><span>累積天數</span><span style="color:var(--primary);">12 Days</span></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.8rem; font-weight:800;"><span>SB 等級</span><span style="color:var(--primary);">Intermediate</span></div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="content-card">
+                <h3 style="font-size:1.4rem; font-weight:950; margin-bottom:2rem; display:flex; align-items:center; gap:0.8rem;"><i data-lucide="compass" style="color:var(--primary);"></i> 滑雪進度追蹤 (Skill Path)</h3>
+                
+                <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                    <div class="skill-node">
+                        <div style="width:40px; height:40px; border-radius:12px; background:rgba(37,99,235,0.1); display:flex; align-items:center; justify-content:center; color:var(--primary); font-family:'Outfit'; font-weight:950;">04</div>
+                        <div>
+                            <div style="font-weight:900; font-size:1.1rem;">動態連續轉彎 (Dynamic Turns)</div>
+                            <div style="font-size:0.75rem; color:#94a3b8; font-weight:700;">狀態：課程進行中 | 教練：佐藤 健一</div>
+                        </div>
+                    </div>
+                    <div class="skill-node" style="opacity:0.5; filter:grayscale(1);">
+                        <div style="width:40px; height:40px; border-radius:12px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#64748b; font-family:'Outfit'; font-weight:950;"><i data-lucide="lock" style="width:16px;"></i></div>
+                        <div>
+                            <div style="font-weight:900; font-size:1.1rem;">刻蝕轉彎基礎 (Carving Basics)</div>
+                            <div style="font-size:0.75rem; color:#94a3b8; font-weight:700;">未解鎖</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 style="font-size:1.4rem; font-weight:950; margin-bottom:2rem;">即將到來的課程</h3>
+                <div style="background:#fcfdfe; border:1px dashed var(--primary); border-radius:24px; padding:2rem; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-family:'Outfit'; font-weight:900; font-size:1.5rem; color:var(--primary);">2026-12-24</div>
+                        <div style="font-weight:800; font-size:1rem; margin-top:0.4rem;">二世谷 | 初階單板下午班</div>
+                    </div>
+                    <button class="neon-btn" style="padding:0.75rem 2rem;" onclick="location.href='refund-wizard.html'">管理預約</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教練排程管理 | SkiFun Coach</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../components.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f172a;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: var(--secondary); display: flex; min-height: 100vh; }
+
+        aside { width: 280px; background: var(--secondary); padding: 2.5rem; display: flex; flex-direction: column; gap: 3rem; position: fixed; height: 100vh; color: white; z-index: 100; }
+        .logo { display:flex; align-items:center; gap:0.8rem; text-decoration:none; color:white; font-size:1.6rem; font-weight:950; font-family:'Outfit'; }
+        
+        main { flex-grow: 1; padding: 3rem 4rem; margin-left: 280px; width: 100%; max-width: 1400px; }
+        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; }
+        h1 { font-size: 2.2rem; font-weight: 950; letter-spacing: -1.5px; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-deep); }
+        .cal-header { background: #f8fafc; padding: 1.5rem; text-align: center; font-family:'Outfit'; font-weight: 900; font-size: 0.8rem; color: #64748b; }
+        .cal-cell { background: white; min-height: 150px; padding: 1rem; position: relative; }
+        .cal-cell.today { background: #fcfdfe; }
+        .cal-date { font-family: 'Outfit'; font-weight: 800; font-size: 1.1rem; color: #94a3b8; margin-bottom: 0.5rem; }
+        .today .cal-date { color: var(--primary); }
+        
+        .slot-pill { background: rgba(37,99,235,0.1); color: var(--primary); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.7rem; font-weight: 950; margin-bottom: 0.4rem; border: 1px solid rgba(37,99,235,0.2); }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo">
+            <div class="logo-icon" style="background:var(--primary); width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;"><i data-lucide="mountain" style="width:18px;"></i></div>
+            <span>SkiFun<span style="color: var(--primary);">Coach</span></span>
+        </div>
+        <nav style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <a href="#" style="background: rgba(255,255,255,0.05); color: white; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; border-radius: 10px;"><i data-lucide="calendar" style="width: 18px;"></i> 排程與教學日誌</a>
+            <a href="profile.html" style="color: #94a3b8; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem;"><i data-lucide="award" style="width: 18px;"></i> 教練資歷與證照</a>
+            <a href="mobile.html" style="color: #94a3b8; text-decoration: none; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem;"><i data-lucide="smartphone" style="width: 18px;"></i> 行動工作台</a>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1>專業教學排程 (Pro Scheduler)</h1>
+                <p style="color: #64748b; font-weight: 600; margin-top: 0.5rem;">管理您的日常教學時段與「週重複」規則，系統將自動同步至學員預約端。</p>
+            </div>
+            <button class="neon-btn"><i data-lucide="plus" style="width:16px; vertical-align:middle;"></i> 新增排班時段</button>
+        </header>
+
+        <div class="calendar-grid">
+            <div class="cal-header">MON</div><div class="cal-header">TUE</div><div class="cal-header">WED</div>
+            <div class="cal-header">THU</div><div class="cal-header">FRI</div><div class="cal-header">SAT</div><div class="cal-header">SUN</div>
+            
+            <div class="cal-cell"><div class="cal-date">21</div></div>
+            <div class="cal-cell"><div class="cal-date">22</div></div>
+            <div class="cal-cell"><div class="cal-date">23</div></div>
+            <div class="cal-cell today">
+                <div class="cal-date">24</div>
+                <div class="slot-pill">09:00 二世谷初階</div>
+                <div class="slot-pill">13:00 白馬進階</div>
+            </div>
+            <div class="cal-cell"><div class="cal-date">25</div></div>
+            <div class="cal-cell"><div class="cal-date">26</div></div>
+            <div class="cal-cell"><div class="cal-date">27</div></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>

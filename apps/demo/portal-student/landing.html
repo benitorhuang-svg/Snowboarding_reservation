@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkiFun Japan | 頂級滑雪預約系統</title>
+    <meta name="description" content="高品質滑雪預約平台，提供二世谷、白馬頂級教練課程預約。">
+    
+    <!-- SEO & Social Media -->
+    <meta property="og:title" content="SkiFun Japan | 頂級滑雪預約">
+    <meta property="og:description" content="預約二世谷、白馬頂級教練，體驗極致 Japow。">
+    <meta property="og:image" content="../assets/japan_skiing_hero_1776433969618.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: #1e293b; line-height: 1.6; }
+
+        .hero { height: 90vh; background: url('../assets/japan_skiing_hero_1776433969618.png') center/cover no-repeat; display: flex; align-items: center; justify-content: center; position: relative; color: white; text-align: center; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.45); }
+        .hero-content { position: relative; z-index: 10; padding: 2rem; max-width: 800px; }
+
+        .btn-primary { background: var(--primary); color: white; padding: 1.25rem 2.5rem; border-radius: 12px; font-weight: 950; text-decoration: none; display: inline-block; transition: var(--transition); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <nav style="height: 72px; background: white; display: flex; align-items: center; justify-content: space-between; padding: 0 4rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div style="font-family:'Outfit'; font-weight:950; font-size:1.4rem; color:var(--secondary);">SkiFun</div>
+        <div style="display: flex; gap: 2rem;">
+            <a href="booking.html" style="text-decoration:none; color:var(--primary); font-weight:900;">立即預約</a>
+            <a href="auth.html" style="text-decoration:none; color:var(--secondary); font-weight:900;">角色切換</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 style="font-size: 4rem; font-weight: 950; letter-spacing: -2px;">Explore Japan's Finest Powder</h1>
+            <p style="font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 3rem;">專業教練伴您挑戰極致雪境</p>
+            <a href="booking.html" class="btn-primary">START YOUR JOURNEY</a>
+        </div>
+    </section>
+
+    <script type="module">
+        import SkiFunState from '../shared-state.js';
+        lucide.createIcons();
+    </script>
+</body>
+</html>
